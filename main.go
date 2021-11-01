@@ -2,16 +2,18 @@ package main
 
 import (
 	"bufio"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"io"
-	"net/url"
 	"os"
 	"os/signal"
 	"regexp"
 	"strings"
 	"syscall"
 	"time"
+
+	"github.com/urfave/cli/v2"
 
 	"golang.org/x/text/language"
 
@@ -22,35 +24,9 @@ import (
 	"github.com/therecipe/qt/gui"
 	"github.com/therecipe/qt/widgets"
 
-	"github.com/iawia002/annie/config"
 	"github.com/iawia002/annie/downloader"
-	"github.com/iawia002/annie/extractors/bcy"
-	"github.com/iawia002/annie/extractors/bilibili"
-	"github.com/iawia002/annie/extractors/douyin"
-	"github.com/iawia002/annie/extractors/douyu"
-	"github.com/iawia002/annie/extractors/facebook"
-	"github.com/iawia002/annie/extractors/geekbang"
-	"github.com/iawia002/annie/extractors/instagram"
-	"github.com/iawia002/annie/extractors/iqiyi"
-	"github.com/iawia002/annie/extractors/mgtv"
-	"github.com/iawia002/annie/extractors/miaopai"
-	"github.com/iawia002/annie/extractors/netease"
-	"github.com/iawia002/annie/extractors/pixivision"
-	"github.com/iawia002/annie/extractors/pornhub"
-	"github.com/iawia002/annie/extractors/qq"
-	"github.com/iawia002/annie/extractors/tangdou"
-	"github.com/iawia002/annie/extractors/tiktok"
-	"github.com/iawia002/annie/extractors/tumblr"
-	"github.com/iawia002/annie/extractors/twitter"
-	"github.com/iawia002/annie/extractors/udn"
-	"github.com/iawia002/annie/extractors/universal"
-	"github.com/iawia002/annie/extractors/vimeo"
-	"github.com/iawia002/annie/extractors/weibo"
-	"github.com/iawia002/annie/extractors/xvideos"
-	"github.com/iawia002/annie/extractors/yinyuetai"
-	"github.com/iawia002/annie/extractors/youku"
-	"github.com/iawia002/annie/extractors/youtube"
-	"github.com/iawia002/annie/utils"
+	"github.com/iawia002/annie/extractors"
+	"github.com/iawia002/annie/extractors/types"
 
 	"github.com/fanaticscripter/annie-mingui/util"
 )
@@ -58,7 +34,7 @@ import (
 const appName = "annie-mingui"
 const appAuthor = "Zhiming Wang"
 const appAuthorDomain = "zhimingwang.org"
-const about = `<p><strong>annie-mingui</strong> v2020.02.09</p>
+const about = `<p><strong>annie-mingui</strong> v0.11.0</p>
 <p>Copyright (c) 2020 Zhiming Wang</p>
 <p>annie-mingui is a Qt wrapper for <a href="https://github.com/iawia002/annie">iawia002/annie</a> the video downloader. Credits:</p>
 <ul>
@@ -149,110 +125,68 @@ func tr(s string) string {
 //
 //   https://github.com/iawia002/annie/blob/master/main.go
 
-func printError(url string, err error) {
-	fmt.Printf(
-		"Downloading %s error:\n%s\n", url, err,
-	)
-}
-
-func download(videoURL string) bool {
-	var (
-		domain string
-		err    error
-		data   []downloader.Data
-	)
-	bilibiliShortLink := utils.MatchOneOf(videoURL, `^(av|ep)\d+`)
-	if bilibiliShortLink != nil && len(bilibiliShortLink) > 1 {
-		bilibiliURL := map[string]string{
-			"av": "https://www.bilibili.com/video/",
-			"ep": "https://www.bilibili.com/bangumi/play/",
-		}
-		domain = "bilibili"
-		videoURL = bilibiliURL[bilibiliShortLink[1]] + videoURL
-	} else {
-		u, err := url.ParseRequestURI(videoURL)
-		if err != nil {
-			printError(videoURL, err)
-			return false
-		}
-		domain = utils.Domain(u.Host)
-	}
-	switch domain {
-	case "douyin", "iesdouyin":
-		data, err = douyin.Extract(videoURL)
-	case "bilibili":
-		data, err = bilibili.Extract(videoURL)
-	case "bcy":
-		data, err = bcy.Extract(videoURL)
-	case "pixivision":
-		data, err = pixivision.Extract(videoURL)
-	case "youku":
-		data, err = youku.Extract(videoURL)
-	case "youtube", "youtu": // youtu.be
-		data, err = youtube.Extract(videoURL)
-	case "iqiyi":
-		data, err = iqiyi.Extract(videoURL)
-	case "mgtv":
-		data, err = mgtv.Extract(videoURL)
-	case "tangdou":
-		data, err = tangdou.Extract(videoURL)
-	case "tumblr":
-		data, err = tumblr.Extract(videoURL)
-	case "vimeo":
-		data, err = vimeo.Extract(videoURL)
-	case "facebook":
-		data, err = facebook.Extract(videoURL)
-	case "douyu":
-		data, err = douyu.Extract(videoURL)
-	case "miaopai":
-		data, err = miaopai.Extract(videoURL)
-	case "163":
-		data, err = netease.Extract(videoURL)
-	case "weibo":
-		data, err = weibo.Extract(videoURL)
-	case "instagram":
-		data, err = instagram.Extract(videoURL)
-	case "twitter":
-		data, err = twitter.Extract(videoURL)
-	case "qq":
-		data, err = qq.Extract(videoURL)
-	case "yinyuetai":
-		data, err = yinyuetai.Extract(videoURL)
-	case "geekbang":
-		data, err = geekbang.Extract(videoURL)
-	case "pornhub":
-		data, err = pornhub.Extract(videoURL)
-	case "xvideos":
-		data, err = xvideos.Extract(videoURL)
-	case "udn":
-		data, err = udn.Extract(videoURL)
-	case "tiktok":
-		data, err = tiktok.Extract(videoURL)
-	default:
-		data, err = universal.Extract(videoURL)
-	}
+func download(c *cli.Context, videoURL string) error {
+	data, err := extractors.Extract(videoURL, types.Options{
+		Playlist:         guiConfig.PlaylistEnabled,
+		Items:            c.String("items"),
+		ItemStart:        int(c.Uint("start")),
+		ItemEnd:          int(c.Uint("end")),
+		ThreadNumber:     int(c.Uint("thread")),
+		EpisodeTitleOnly: c.Bool("episode-title-only"),
+		Cookie:           c.String("cookie"),
+		YoukuCcode:       c.String("youku-ccode"),
+		YoukuCkey:        c.String("youku-ckey"),
+		YoukuPassword:    c.String("youku-password"),
+	})
 	if err != nil {
 		// if this error occurs, it means that an error occurred before actually starting to extract data
 		// (there is an error in the preparation step), and the data list is empty.
-		printError(videoURL, err)
-		return false
+		return err
 	}
-	var isErr bool
+
+	if c.Bool("json") {
+		jsonData, err := json.MarshalIndent(data, "", "\t")
+		if err != nil {
+			return err
+		}
+		fmt.Printf("%s\n", jsonData)
+		return nil
+	}
+
+	defaultDownloader := downloader.New(downloader.Options{
+		InfoOnly:   c.Bool("info"),
+		Stream:     c.String("stream-format"),
+		Refer:      c.String("refer"),
+		OutputPath: guiConfig.DestinationFolder,
+		// TODO: Avoid the dirty approach (looks so stupid now)
+		OutputName:     c.String("output-name"),
+		FileNameLength: int(c.Uint("file-name-length")),
+		Caption:        c.Bool("caption"),
+		MultiThread:    c.Bool("multi-thread"),
+		ThreadNumber:   int(c.Uint("thread")),
+		RetryTimes:     int(c.Uint("retry")),
+		ChunkSizeMB:    int(c.Uint("chunk-size")),
+		UseAria2RPC:    c.Bool("aria2"),
+		Aria2Token:     c.String("aria2-token"),
+		Aria2Method:    c.String("aria2-method"),
+		Aria2Addr:      c.String("aria2-addr"),
+	})
+	errors := make([]error, 0)
 	for _, item := range data {
 		if item.Err != nil {
 			// if this error occurs, the preparation step is normal, but the data extraction is wrong.
 			// the data is an empty struct.
-			printError(item.URL, item.Err)
-			isErr = true
+			errors = append(errors, item.Err)
 			continue
 		}
-		err = downloader.Download(item, videoURL, config.ChunkSizeMB)
-		if err != nil {
-			printError(item.URL, err)
-			isErr = true
+		if err = defaultDownloader.Download(item); err != nil {
+			errors = append(errors, err)
 		}
 	}
-	return !isErr
+	if len(errors) != 0 {
+		return errors[0]
+	}
+	return nil
 }
 
 // ----- END ANNIE CODE -----
@@ -467,9 +401,9 @@ func main() {
 		if len(url) > 0 {
 			output.addLine(time.Now().Format("15:04:05 ") + tr("Download started"))
 
-			config.OutputPath = guiConfig.DestinationFolder
-			config.Playlist = guiConfig.PlaylistEnabled
-			glog.Infof("downloading %s => %s", url, config.OutputPath)
+			// config.OutputPath = guiConfig.DestinationFolder
+			// config.Playlist = guiConfig.PlaylistEnabled
+			glog.Infof("downloading %s => %s", url, guiConfig.DestinationFolder)
 
 			savedStdout := os.Stdout
 			r, w, _ := os.Pipe()
@@ -491,7 +425,7 @@ func main() {
 			}()
 
 			go func() {
-				if !download(url) {
+				if download(nil, url) != nil {
 					fmt.Println(tr("On network errors, e.g. HTTP 403, please retry a few times."))
 				}
 				w.Close()
