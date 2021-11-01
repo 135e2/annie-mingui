@@ -3,22 +3,27 @@ package pornhub
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
+	"strings"
 
-	"github.com/iawia002/annie/downloader"
-	"github.com/iawia002/annie/extractors"
+	"github.com/iawia002/annie/extractors/types"
 	"github.com/iawia002/annie/request"
 	"github.com/iawia002/annie/utils"
 )
 
 type pornhubData struct {
-	Format   string          `json:"format"`
-	Quality  json.RawMessage `json:"quality"`
-	VideoURL string          `json:"videoUrl"`
+	Quality  json.RawMessage `json:"text"`
+	VideoURL string          `json:"url"`
 }
 
-// Extract is the main function for extracting data
-func Extract(url string) ([]downloader.Data, error) {
+type extractor struct{}
+
+// New returns a youtube extractor.
+func New() types.Extractor {
+	return &extractor{}
+}
+
+// Extract is the main function to extract the data.
+func (e *extractor) Extract(url string, option types.Options) ([]*types.Data, error) {
 	html, err := request.Get(url, url, nil)
 	if err != nil {
 		return nil, err
@@ -26,15 +31,15 @@ func Extract(url string) ([]downloader.Data, error) {
 
 	var title string
 	desc := utils.MatchOneOf(html, `<span class="inlineFree">(.+?)</span>`)
-	if desc != nil && len(desc) > 1 {
+	if len(desc) > 1 {
 		title = desc[1]
 	} else {
 		title = "pornhub video"
 	}
 
-	realURLs := utils.MatchOneOf(html, `"mediaDefinitions":(.+?),"isVertical"`)
+	realURLs := utils.MatchOneOf(html, `qualityItems_\d+\s=\s([^;]+)`)
 	if realURLs == nil || len(realURLs) < 2 {
-		return nil, extractors.ErrURLParseFailed
+		return nil, types.ErrURLParseFailed
 	}
 
 	var pornhubs []pornhubData
@@ -42,9 +47,9 @@ func Extract(url string) ([]downloader.Data, error) {
 		return nil, err
 	}
 
-	streams := make(map[string]downloader.Stream, len(pornhubs))
+	streams := make(map[string]*types.Stream, len(pornhubs))
 	for _, data := range pornhubs {
-		if data.Format == "hls" {
+		if !strings.Contains(data.VideoURL, "mp4") {
 			continue
 		}
 
@@ -57,33 +62,29 @@ func Extract(url string) ([]downloader.Data, error) {
 			// ]
 			continue
 		}
-		quality := string(data.Quality)
+		quality := strings.ReplaceAll(string(data.Quality), "\"", "")
 
-		realURL := data.VideoURL
-		if len(realURL) == 0 {
-			continue
-		}
-		size, err := request.Size(realURL, url)
+		size, err := request.Size(data.VideoURL, data.VideoURL)
 		if err != nil {
 			return nil, err
 		}
-		urlData := downloader.URL{
-			URL:  realURL,
+		urlData := &types.Part{
+			URL:  data.VideoURL,
 			Size: size,
 			Ext:  "mp4",
 		}
-		streams[quality] = downloader.Stream{
-			URLs:    []downloader.URL{urlData},
+		streams[quality] = &types.Stream{
+			Parts:   []*types.Part{urlData},
 			Size:    size,
-			Quality: fmt.Sprintf("%sP", quality),
+			Quality: quality,
 		}
 	}
 
-	return []downloader.Data{
+	return []*types.Data{
 		{
 			Site:    "Pornhub pornhub.com",
 			Title:   title,
-			Type:    "video",
+			Type:    types.DataTypeVideo,
 			Streams: streams,
 			URL:     url,
 		},

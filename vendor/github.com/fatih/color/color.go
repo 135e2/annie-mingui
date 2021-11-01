@@ -200,9 +200,11 @@ func (c *Color) Fprint(w io.Writer, a ...interface{}) (n int, err error) {
 // string. It returns the number of bytes written and any write error
 // encountered. This is the standard fmt.Print() method wrapped with the given
 // color.
-func (*Color) Print(a ...interface{}) (n int, err error) {
-	return fmt.Print(a...)
-	// return fmt.Fprint(Output, a...)
+func (c *Color) Print(a ...interface{}) (n int, err error) {
+	c.Set()
+	defer c.unset()
+
+	return fmt.Fprint(Output, a...)
 }
 
 // Fprintf formats according to a format specifier and writes to w.
@@ -219,9 +221,11 @@ func (c *Color) Fprintf(w io.Writer, format string, a ...interface{}) (n int, er
 // Printf formats according to a format specifier and writes to standard output.
 // It returns the number of bytes written and any write error encountered.
 // This is the standard fmt.Printf() method wrapped with the given color.
-func (*Color) Printf(format string, a ...interface{}) (n int, err error) {
-	return fmt.Printf(format, a...)
-	// return fmt.Fprintf(Output, format, a...)
+func (c *Color) Printf(format string, a ...interface{}) (n int, err error) {
+	c.Set()
+	defer c.unset()
+
+	return fmt.Fprintf(Output, format, a...)
 }
 
 // Fprintln formats using the default formats for its operands and writes to w.
@@ -240,9 +244,11 @@ func (c *Color) Fprintln(w io.Writer, a ...interface{}) (n int, err error) {
 // appended. It returns the number of bytes written and any write error
 // encountered. This is the standard fmt.Print() method wrapped with the given
 // color.
-func (*Color) Println(a ...interface{}) (n int, err error) {
-	return fmt.Println(a...)
-	// return fmt.Fprintln(Output, a...)
+func (c *Color) Println(a ...interface{}) (n int, err error) {
+	c.Set()
+	defer c.unset()
+
+	return fmt.Fprintln(Output, a...)
 }
 
 // Sprint is just like Print, but returns a string instead of printing it.

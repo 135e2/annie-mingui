@@ -1,22 +1,5 @@
 package bilibili
 
-type qualityInfo struct {
-	Description []string `json:"accept_description"`
-	Quality     []int    `json:"accept_quality"`
-}
-
-type dURLData struct {
-	Size  int64  `json:"size"`
-	URL   string `json:"url"`
-	Order int    `json:"order"`
-}
-
-type bilibiliData struct {
-	DURL    []dURLData `json:"durl"`
-	Format  string     `json:"format"`
-	Quality int        `json:"quality"`
-}
-
 // {"code":0,"message":"0","ttl":1,"data":{"token":"aaa"}}
 // {"code":-101,"message":"账号未登录","ttl":1}
 type tokenData struct {
@@ -30,10 +13,11 @@ type token struct {
 }
 
 type bangumiEpData struct {
-	Aid  int `json:"aid"`
-	Cid  int `json:"cid"`
-	ID   int `json:"id"`
-	EpID int `json:"ep_id"`
+	Aid  int    `json:"aid"`
+	Cid  int    `json:"cid"`
+	BVid string `json:"bvid"`
+	ID   int    `json:"id"`
+	EpID int    `json:"ep_id"`
 }
 
 type bangumiData struct {
@@ -54,10 +38,43 @@ type multiPageVideoData struct {
 
 type multiPage struct {
 	Aid       int                `json:"aid"`
+	BVid      string             `json:"bvid"`
 	VideoData multiPageVideoData `json:"videoData"`
 }
 
+type dashStream struct {
+	ID        int    `json:"id"`
+	BaseURL   string `json:"baseUrl"`
+	Bandwidth int    `json:"bandwidth"`
+}
+
+type dashStreams struct {
+	Video []dashStream `json:"video"`
+	Audio []dashStream `json:"audio"`
+}
+
+type dURL struct {
+	Size int64  `json:"size"`
+	URL  string `json:"url"`
+}
+
+type dashInfo struct {
+	CurQuality  int         `json:"quality"`
+	Description []string    `json:"accept_description"`
+	Quality     []int       `json:"accept_quality"`
+	Streams     dashStreams `json:"dash"`
+	DURL        []dURL      `json:"durl"`
+}
+
+type dash struct {
+	Code    int      `json:"code"`
+	Message string   `json:"message"`
+	Data    dashInfo `json:"data"`
+	Result  dashInfo `json:"result"`
+}
+
 var qualityString = map[int]string{
+	120: "超清 4K",
 	116: "高清 1080P60",
 	74:  "高清 720P60",
 	112: "高清 1080P+",

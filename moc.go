@@ -27,7 +27,7 @@ func cGoUnpackBytes(s C.struct_Moc_PackedString) []byte {
 	defer cGoFreePacked(s.ptr)
 	if int(s.len) == -1 {
 		gs := C.GoString(s.data)
-		return *(*[]byte)(unsafe.Pointer(&gs))
+		return []byte(gs)
 	}
 	return C.GoBytes(unsafe.Pointer(s.data), C.int(s.len))
 }
@@ -88,15 +88,15 @@ func NewPlainTextEditFromPointer(ptr unsafe.Pointer) (n *PlainTextEdit) {
 }
 func (this *PlainTextEdit) Init() { this.init() }
 
-//export callbackPlainTextEditb1a9c9_Constructor
-func callbackPlainTextEditb1a9c9_Constructor(ptr unsafe.Pointer) {
+//export callbackPlainTextEdit209179_Constructor
+func callbackPlainTextEdit209179_Constructor(ptr unsafe.Pointer) {
 	this := NewPlainTextEditFromPointer(ptr)
 	qt.Register(ptr, this)
 	this.init()
 }
 
-//export callbackPlainTextEditb1a9c9_AddLine
-func callbackPlainTextEditb1a9c9_AddLine(ptr unsafe.Pointer, v0 C.struct_Moc_PackedString) {
+//export callbackPlainTextEdit209179_AddLine
+func callbackPlainTextEdit209179_AddLine(ptr unsafe.Pointer, v0 C.struct_Moc_PackedString) {
 	if signal := qt.GetSignal(ptr, "addLine"); signal != nil {
 		(*(*func(string))(signal))(cGoUnpackString(v0))
 	}
@@ -132,16 +132,16 @@ func (ptr *PlainTextEdit) AddLine(v0 string) {
 			v0C = C.CString(v0)
 			defer C.free(unsafe.Pointer(v0C))
 		}
-		C.PlainTextEditb1a9c9_AddLine(ptr.Pointer(), C.struct_Moc_PackedString{data: v0C, len: C.longlong(len(v0))})
+		C.PlainTextEdit209179_AddLine(ptr.Pointer(), C.struct_Moc_PackedString{data: v0C, len: C.longlong(len(v0))})
 	}
 }
 
 func PlainTextEdit_QRegisterMetaType() int {
-	return int(int32(C.PlainTextEditb1a9c9_PlainTextEditb1a9c9_QRegisterMetaType()))
+	return int(int32(C.PlainTextEdit209179_PlainTextEdit209179_QRegisterMetaType()))
 }
 
 func (ptr *PlainTextEdit) QRegisterMetaType() int {
-	return int(int32(C.PlainTextEditb1a9c9_PlainTextEditb1a9c9_QRegisterMetaType()))
+	return int(int32(C.PlainTextEdit209179_PlainTextEdit209179_QRegisterMetaType()))
 }
 
 func PlainTextEdit_QRegisterMetaType2(typeName string) int {
@@ -150,7 +150,7 @@ func PlainTextEdit_QRegisterMetaType2(typeName string) int {
 		typeNameC = C.CString(typeName)
 		defer C.free(unsafe.Pointer(typeNameC))
 	}
-	return int(int32(C.PlainTextEditb1a9c9_PlainTextEditb1a9c9_QRegisterMetaType2(typeNameC)))
+	return int(int32(C.PlainTextEdit209179_PlainTextEdit209179_QRegisterMetaType2(typeNameC)))
 }
 
 func (ptr *PlainTextEdit) QRegisterMetaType2(typeName string) int {
@@ -159,15 +159,15 @@ func (ptr *PlainTextEdit) QRegisterMetaType2(typeName string) int {
 		typeNameC = C.CString(typeName)
 		defer C.free(unsafe.Pointer(typeNameC))
 	}
-	return int(int32(C.PlainTextEditb1a9c9_PlainTextEditb1a9c9_QRegisterMetaType2(typeNameC)))
+	return int(int32(C.PlainTextEdit209179_PlainTextEdit209179_QRegisterMetaType2(typeNameC)))
 }
 
 func PlainTextEdit_QmlRegisterType() int {
-	return int(int32(C.PlainTextEditb1a9c9_PlainTextEditb1a9c9_QmlRegisterType()))
+	return int(int32(C.PlainTextEdit209179_PlainTextEdit209179_QmlRegisterType()))
 }
 
 func (ptr *PlainTextEdit) QmlRegisterType() int {
-	return int(int32(C.PlainTextEditb1a9c9_PlainTextEditb1a9c9_QmlRegisterType()))
+	return int(int32(C.PlainTextEdit209179_PlainTextEdit209179_QmlRegisterType()))
 }
 
 func PlainTextEdit_QmlRegisterType2(uri string, versionMajor int, versionMinor int, qmlName string) int {
@@ -181,7 +181,7 @@ func PlainTextEdit_QmlRegisterType2(uri string, versionMajor int, versionMinor i
 		qmlNameC = C.CString(qmlName)
 		defer C.free(unsafe.Pointer(qmlNameC))
 	}
-	return int(int32(C.PlainTextEditb1a9c9_PlainTextEditb1a9c9_QmlRegisterType2(uriC, C.int(int32(versionMajor)), C.int(int32(versionMinor)), qmlNameC)))
+	return int(int32(C.PlainTextEdit209179_PlainTextEdit209179_QmlRegisterType2(uriC, C.int(int32(versionMajor)), C.int(int32(versionMinor)), qmlNameC)))
 }
 
 func (ptr *PlainTextEdit) QmlRegisterType2(uri string, versionMajor int, versionMinor int, qmlName string) int {
@@ -195,12 +195,68 @@ func (ptr *PlainTextEdit) QmlRegisterType2(uri string, versionMajor int, version
 		qmlNameC = C.CString(qmlName)
 		defer C.free(unsafe.Pointer(qmlNameC))
 	}
-	return int(int32(C.PlainTextEditb1a9c9_PlainTextEditb1a9c9_QmlRegisterType2(uriC, C.int(int32(versionMajor)), C.int(int32(versionMinor)), qmlNameC)))
+	return int(int32(C.PlainTextEdit209179_PlainTextEdit209179_QmlRegisterType2(uriC, C.int(int32(versionMajor)), C.int(int32(versionMinor)), qmlNameC)))
+}
+
+func PlainTextEdit_QmlRegisterUncreatableType(uri string, versionMajor int, versionMinor int, qmlName string, message string) int {
+	var uriC *C.char
+	if uri != "" {
+		uriC = C.CString(uri)
+		defer C.free(unsafe.Pointer(uriC))
+	}
+	var qmlNameC *C.char
+	if qmlName != "" {
+		qmlNameC = C.CString(qmlName)
+		defer C.free(unsafe.Pointer(qmlNameC))
+	}
+	var messageC *C.char
+	if message != "" {
+		messageC = C.CString(message)
+		defer C.free(unsafe.Pointer(messageC))
+	}
+	return int(int32(C.PlainTextEdit209179_PlainTextEdit209179_QmlRegisterUncreatableType(uriC, C.int(int32(versionMajor)), C.int(int32(versionMinor)), qmlNameC, C.struct_Moc_PackedString{data: messageC, len: C.longlong(len(message))})))
+}
+
+func (ptr *PlainTextEdit) QmlRegisterUncreatableType(uri string, versionMajor int, versionMinor int, qmlName string, message string) int {
+	var uriC *C.char
+	if uri != "" {
+		uriC = C.CString(uri)
+		defer C.free(unsafe.Pointer(uriC))
+	}
+	var qmlNameC *C.char
+	if qmlName != "" {
+		qmlNameC = C.CString(qmlName)
+		defer C.free(unsafe.Pointer(qmlNameC))
+	}
+	var messageC *C.char
+	if message != "" {
+		messageC = C.CString(message)
+		defer C.free(unsafe.Pointer(messageC))
+	}
+	return int(int32(C.PlainTextEdit209179_PlainTextEdit209179_QmlRegisterUncreatableType(uriC, C.int(int32(versionMajor)), C.int(int32(versionMinor)), qmlNameC, C.struct_Moc_PackedString{data: messageC, len: C.longlong(len(message))})))
+}
+
+func PlainTextEdit_QmlRegisterAnonymousType(uri string, versionMajor int) int {
+	var uriC *C.char
+	if uri != "" {
+		uriC = C.CString(uri)
+		defer C.free(unsafe.Pointer(uriC))
+	}
+	return int(int32(C.PlainTextEdit209179_PlainTextEdit209179_QmlRegisterAnonymousType(uriC, C.int(int32(versionMajor)))))
+}
+
+func (ptr *PlainTextEdit) QmlRegisterAnonymousType(uri string, versionMajor int) int {
+	var uriC *C.char
+	if uri != "" {
+		uriC = C.CString(uri)
+		defer C.free(unsafe.Pointer(uriC))
+	}
+	return int(int32(C.PlainTextEdit209179_PlainTextEdit209179_QmlRegisterAnonymousType(uriC, C.int(int32(versionMajor)))))
 }
 
 func (ptr *PlainTextEdit) __scrollBarWidgets_atList(i int) *std_widgets.QWidget {
 	if ptr.Pointer() != nil {
-		tmpValue := std_widgets.NewQWidgetFromPointer(C.PlainTextEditb1a9c9___scrollBarWidgets_atList(ptr.Pointer(), C.int(int32(i))))
+		tmpValue := std_widgets.NewQWidgetFromPointer(C.PlainTextEdit209179___scrollBarWidgets_atList(ptr.Pointer(), C.int(int32(i))))
 		if !qt.ExistsSignal(tmpValue.Pointer(), "destroyed") {
 			tmpValue.ConnectDestroyed(func(*std_core.QObject) { tmpValue.SetPointer(nil) })
 		}
@@ -211,17 +267,17 @@ func (ptr *PlainTextEdit) __scrollBarWidgets_atList(i int) *std_widgets.QWidget 
 
 func (ptr *PlainTextEdit) __scrollBarWidgets_setList(i std_widgets.QWidget_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9___scrollBarWidgets_setList(ptr.Pointer(), std_widgets.PointerFromQWidget(i))
+		C.PlainTextEdit209179___scrollBarWidgets_setList(ptr.Pointer(), std_widgets.PointerFromQWidget(i))
 	}
 }
 
 func (ptr *PlainTextEdit) __scrollBarWidgets_newList() unsafe.Pointer {
-	return C.PlainTextEditb1a9c9___scrollBarWidgets_newList(ptr.Pointer())
+	return C.PlainTextEdit209179___scrollBarWidgets_newList(ptr.Pointer())
 }
 
 func (ptr *PlainTextEdit) __actions_atList(i int) *std_widgets.QAction {
 	if ptr.Pointer() != nil {
-		tmpValue := std_widgets.NewQActionFromPointer(C.PlainTextEditb1a9c9___actions_atList(ptr.Pointer(), C.int(int32(i))))
+		tmpValue := std_widgets.NewQActionFromPointer(C.PlainTextEdit209179___actions_atList(ptr.Pointer(), C.int(int32(i))))
 		if !qt.ExistsSignal(tmpValue.Pointer(), "destroyed") {
 			tmpValue.ConnectDestroyed(func(*std_core.QObject) { tmpValue.SetPointer(nil) })
 		}
@@ -232,17 +288,17 @@ func (ptr *PlainTextEdit) __actions_atList(i int) *std_widgets.QAction {
 
 func (ptr *PlainTextEdit) __actions_setList(i std_widgets.QAction_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9___actions_setList(ptr.Pointer(), std_widgets.PointerFromQAction(i))
+		C.PlainTextEdit209179___actions_setList(ptr.Pointer(), std_widgets.PointerFromQAction(i))
 	}
 }
 
 func (ptr *PlainTextEdit) __actions_newList() unsafe.Pointer {
-	return C.PlainTextEditb1a9c9___actions_newList(ptr.Pointer())
+	return C.PlainTextEdit209179___actions_newList(ptr.Pointer())
 }
 
 func (ptr *PlainTextEdit) __addActions_actions_atList(i int) *std_widgets.QAction {
 	if ptr.Pointer() != nil {
-		tmpValue := std_widgets.NewQActionFromPointer(C.PlainTextEditb1a9c9___addActions_actions_atList(ptr.Pointer(), C.int(int32(i))))
+		tmpValue := std_widgets.NewQActionFromPointer(C.PlainTextEdit209179___addActions_actions_atList(ptr.Pointer(), C.int(int32(i))))
 		if !qt.ExistsSignal(tmpValue.Pointer(), "destroyed") {
 			tmpValue.ConnectDestroyed(func(*std_core.QObject) { tmpValue.SetPointer(nil) })
 		}
@@ -253,17 +309,17 @@ func (ptr *PlainTextEdit) __addActions_actions_atList(i int) *std_widgets.QActio
 
 func (ptr *PlainTextEdit) __addActions_actions_setList(i std_widgets.QAction_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9___addActions_actions_setList(ptr.Pointer(), std_widgets.PointerFromQAction(i))
+		C.PlainTextEdit209179___addActions_actions_setList(ptr.Pointer(), std_widgets.PointerFromQAction(i))
 	}
 }
 
 func (ptr *PlainTextEdit) __addActions_actions_newList() unsafe.Pointer {
-	return C.PlainTextEditb1a9c9___addActions_actions_newList(ptr.Pointer())
+	return C.PlainTextEdit209179___addActions_actions_newList(ptr.Pointer())
 }
 
 func (ptr *PlainTextEdit) __insertActions_actions_atList(i int) *std_widgets.QAction {
 	if ptr.Pointer() != nil {
-		tmpValue := std_widgets.NewQActionFromPointer(C.PlainTextEditb1a9c9___insertActions_actions_atList(ptr.Pointer(), C.int(int32(i))))
+		tmpValue := std_widgets.NewQActionFromPointer(C.PlainTextEdit209179___insertActions_actions_atList(ptr.Pointer(), C.int(int32(i))))
 		if !qt.ExistsSignal(tmpValue.Pointer(), "destroyed") {
 			tmpValue.ConnectDestroyed(func(*std_core.QObject) { tmpValue.SetPointer(nil) })
 		}
@@ -274,17 +330,17 @@ func (ptr *PlainTextEdit) __insertActions_actions_atList(i int) *std_widgets.QAc
 
 func (ptr *PlainTextEdit) __insertActions_actions_setList(i std_widgets.QAction_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9___insertActions_actions_setList(ptr.Pointer(), std_widgets.PointerFromQAction(i))
+		C.PlainTextEdit209179___insertActions_actions_setList(ptr.Pointer(), std_widgets.PointerFromQAction(i))
 	}
 }
 
 func (ptr *PlainTextEdit) __insertActions_actions_newList() unsafe.Pointer {
-	return C.PlainTextEditb1a9c9___insertActions_actions_newList(ptr.Pointer())
+	return C.PlainTextEdit209179___insertActions_actions_newList(ptr.Pointer())
 }
 
 func (ptr *PlainTextEdit) __children_atList(i int) *std_core.QObject {
 	if ptr.Pointer() != nil {
-		tmpValue := std_core.NewQObjectFromPointer(C.PlainTextEditb1a9c9___children_atList(ptr.Pointer(), C.int(int32(i))))
+		tmpValue := std_core.NewQObjectFromPointer(C.PlainTextEdit209179___children_atList(ptr.Pointer(), C.int(int32(i))))
 		if !qt.ExistsSignal(tmpValue.Pointer(), "destroyed") {
 			tmpValue.ConnectDestroyed(func(*std_core.QObject) { tmpValue.SetPointer(nil) })
 		}
@@ -295,17 +351,17 @@ func (ptr *PlainTextEdit) __children_atList(i int) *std_core.QObject {
 
 func (ptr *PlainTextEdit) __children_setList(i std_core.QObject_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9___children_setList(ptr.Pointer(), std_core.PointerFromQObject(i))
+		C.PlainTextEdit209179___children_setList(ptr.Pointer(), std_core.PointerFromQObject(i))
 	}
 }
 
 func (ptr *PlainTextEdit) __children_newList() unsafe.Pointer {
-	return C.PlainTextEditb1a9c9___children_newList(ptr.Pointer())
+	return C.PlainTextEdit209179___children_newList(ptr.Pointer())
 }
 
 func (ptr *PlainTextEdit) __dynamicPropertyNames_atList(i int) *std_core.QByteArray {
 	if ptr.Pointer() != nil {
-		tmpValue := std_core.NewQByteArrayFromPointer(C.PlainTextEditb1a9c9___dynamicPropertyNames_atList(ptr.Pointer(), C.int(int32(i))))
+		tmpValue := std_core.NewQByteArrayFromPointer(C.PlainTextEdit209179___dynamicPropertyNames_atList(ptr.Pointer(), C.int(int32(i))))
 		qt.SetFinalizer(tmpValue, (*std_core.QByteArray).DestroyQByteArray)
 		return tmpValue
 	}
@@ -314,17 +370,17 @@ func (ptr *PlainTextEdit) __dynamicPropertyNames_atList(i int) *std_core.QByteAr
 
 func (ptr *PlainTextEdit) __dynamicPropertyNames_setList(i std_core.QByteArray_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9___dynamicPropertyNames_setList(ptr.Pointer(), std_core.PointerFromQByteArray(i))
+		C.PlainTextEdit209179___dynamicPropertyNames_setList(ptr.Pointer(), std_core.PointerFromQByteArray(i))
 	}
 }
 
 func (ptr *PlainTextEdit) __dynamicPropertyNames_newList() unsafe.Pointer {
-	return C.PlainTextEditb1a9c9___dynamicPropertyNames_newList(ptr.Pointer())
+	return C.PlainTextEdit209179___dynamicPropertyNames_newList(ptr.Pointer())
 }
 
 func (ptr *PlainTextEdit) __findChildren_atList(i int) *std_core.QObject {
 	if ptr.Pointer() != nil {
-		tmpValue := std_core.NewQObjectFromPointer(C.PlainTextEditb1a9c9___findChildren_atList(ptr.Pointer(), C.int(int32(i))))
+		tmpValue := std_core.NewQObjectFromPointer(C.PlainTextEdit209179___findChildren_atList(ptr.Pointer(), C.int(int32(i))))
 		if !qt.ExistsSignal(tmpValue.Pointer(), "destroyed") {
 			tmpValue.ConnectDestroyed(func(*std_core.QObject) { tmpValue.SetPointer(nil) })
 		}
@@ -335,17 +391,17 @@ func (ptr *PlainTextEdit) __findChildren_atList(i int) *std_core.QObject {
 
 func (ptr *PlainTextEdit) __findChildren_setList(i std_core.QObject_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9___findChildren_setList(ptr.Pointer(), std_core.PointerFromQObject(i))
+		C.PlainTextEdit209179___findChildren_setList(ptr.Pointer(), std_core.PointerFromQObject(i))
 	}
 }
 
 func (ptr *PlainTextEdit) __findChildren_newList() unsafe.Pointer {
-	return C.PlainTextEditb1a9c9___findChildren_newList(ptr.Pointer())
+	return C.PlainTextEdit209179___findChildren_newList(ptr.Pointer())
 }
 
 func (ptr *PlainTextEdit) __findChildren_atList3(i int) *std_core.QObject {
 	if ptr.Pointer() != nil {
-		tmpValue := std_core.NewQObjectFromPointer(C.PlainTextEditb1a9c9___findChildren_atList3(ptr.Pointer(), C.int(int32(i))))
+		tmpValue := std_core.NewQObjectFromPointer(C.PlainTextEdit209179___findChildren_atList3(ptr.Pointer(), C.int(int32(i))))
 		if !qt.ExistsSignal(tmpValue.Pointer(), "destroyed") {
 			tmpValue.ConnectDestroyed(func(*std_core.QObject) { tmpValue.SetPointer(nil) })
 		}
@@ -356,17 +412,17 @@ func (ptr *PlainTextEdit) __findChildren_atList3(i int) *std_core.QObject {
 
 func (ptr *PlainTextEdit) __findChildren_setList3(i std_core.QObject_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9___findChildren_setList3(ptr.Pointer(), std_core.PointerFromQObject(i))
+		C.PlainTextEdit209179___findChildren_setList3(ptr.Pointer(), std_core.PointerFromQObject(i))
 	}
 }
 
 func (ptr *PlainTextEdit) __findChildren_newList3() unsafe.Pointer {
-	return C.PlainTextEditb1a9c9___findChildren_newList3(ptr.Pointer())
+	return C.PlainTextEdit209179___findChildren_newList3(ptr.Pointer())
 }
 
 func NewPlainTextEdit(parent std_widgets.QWidget_ITF) *PlainTextEdit {
 	PlainTextEdit_QRegisterMetaType()
-	tmpValue := NewPlainTextEditFromPointer(C.PlainTextEditb1a9c9_NewPlainTextEdit(std_widgets.PointerFromQWidget(parent)))
+	tmpValue := NewPlainTextEditFromPointer(C.PlainTextEdit209179_NewPlainTextEdit(std_widgets.PointerFromQWidget(parent)))
 	if !qt.ExistsSignal(tmpValue.Pointer(), "destroyed") {
 		tmpValue.ConnectDestroyed(func(*std_core.QObject) { tmpValue.SetPointer(nil) })
 	}
@@ -380,15 +436,15 @@ func NewPlainTextEdit2(text string, parent std_widgets.QWidget_ITF) *PlainTextEd
 		defer C.free(unsafe.Pointer(textC))
 	}
 	PlainTextEdit_QRegisterMetaType()
-	tmpValue := NewPlainTextEditFromPointer(C.PlainTextEditb1a9c9_NewPlainTextEdit2(C.struct_Moc_PackedString{data: textC, len: C.longlong(len(text))}, std_widgets.PointerFromQWidget(parent)))
+	tmpValue := NewPlainTextEditFromPointer(C.PlainTextEdit209179_NewPlainTextEdit2(C.struct_Moc_PackedString{data: textC, len: C.longlong(len(text))}, std_widgets.PointerFromQWidget(parent)))
 	if !qt.ExistsSignal(tmpValue.Pointer(), "destroyed") {
 		tmpValue.ConnectDestroyed(func(*std_core.QObject) { tmpValue.SetPointer(nil) })
 	}
 	return tmpValue
 }
 
-//export callbackPlainTextEditb1a9c9_DestroyPlainTextEdit
-func callbackPlainTextEditb1a9c9_DestroyPlainTextEdit(ptr unsafe.Pointer) {
+//export callbackPlainTextEdit209179_DestroyPlainTextEdit
+func callbackPlainTextEdit209179_DestroyPlainTextEdit(ptr unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "~PlainTextEdit"); signal != nil {
 		(*(*func())(signal))()
 	} else {
@@ -422,7 +478,7 @@ func (ptr *PlainTextEdit) DestroyPlainTextEdit() {
 	if ptr.Pointer() != nil {
 
 		qt.SetFinalizer(ptr, nil)
-		C.PlainTextEditb1a9c9_DestroyPlainTextEdit(ptr.Pointer())
+		C.PlainTextEdit209179_DestroyPlainTextEdit(ptr.Pointer())
 		ptr.SetPointer(nil)
 	}
 }
@@ -431,13 +487,13 @@ func (ptr *PlainTextEdit) DestroyPlainTextEditDefault() {
 	if ptr.Pointer() != nil {
 
 		qt.SetFinalizer(ptr, nil)
-		C.PlainTextEditb1a9c9_DestroyPlainTextEditDefault(ptr.Pointer())
+		C.PlainTextEdit209179_DestroyPlainTextEditDefault(ptr.Pointer())
 		ptr.SetPointer(nil)
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_AppendHtml
-func callbackPlainTextEditb1a9c9_AppendHtml(ptr unsafe.Pointer, html C.struct_Moc_PackedString) {
+//export callbackPlainTextEdit209179_AppendHtml
+func callbackPlainTextEdit209179_AppendHtml(ptr unsafe.Pointer, html C.struct_Moc_PackedString) {
 	if signal := qt.GetSignal(ptr, "appendHtml"); signal != nil {
 		(*(*func(string))(signal))(cGoUnpackString(html))
 	} else {
@@ -452,12 +508,12 @@ func (ptr *PlainTextEdit) AppendHtmlDefault(html string) {
 			htmlC = C.CString(html)
 			defer C.free(unsafe.Pointer(htmlC))
 		}
-		C.PlainTextEditb1a9c9_AppendHtmlDefault(ptr.Pointer(), C.struct_Moc_PackedString{data: htmlC, len: C.longlong(len(html))})
+		C.PlainTextEdit209179_AppendHtmlDefault(ptr.Pointer(), C.struct_Moc_PackedString{data: htmlC, len: C.longlong(len(html))})
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_AppendPlainText
-func callbackPlainTextEditb1a9c9_AppendPlainText(ptr unsafe.Pointer, text C.struct_Moc_PackedString) {
+//export callbackPlainTextEdit209179_AppendPlainText
+func callbackPlainTextEdit209179_AppendPlainText(ptr unsafe.Pointer, text C.struct_Moc_PackedString) {
 	if signal := qt.GetSignal(ptr, "appendPlainText"); signal != nil {
 		(*(*func(string))(signal))(cGoUnpackString(text))
 	} else {
@@ -472,20 +528,20 @@ func (ptr *PlainTextEdit) AppendPlainTextDefault(text string) {
 			textC = C.CString(text)
 			defer C.free(unsafe.Pointer(textC))
 		}
-		C.PlainTextEditb1a9c9_AppendPlainTextDefault(ptr.Pointer(), C.struct_Moc_PackedString{data: textC, len: C.longlong(len(text))})
+		C.PlainTextEdit209179_AppendPlainTextDefault(ptr.Pointer(), C.struct_Moc_PackedString{data: textC, len: C.longlong(len(text))})
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_BlockCountChanged
-func callbackPlainTextEditb1a9c9_BlockCountChanged(ptr unsafe.Pointer, newBlockCount C.int) {
+//export callbackPlainTextEdit209179_BlockCountChanged
+func callbackPlainTextEdit209179_BlockCountChanged(ptr unsafe.Pointer, newBlockCount C.int) {
 	if signal := qt.GetSignal(ptr, "blockCountChanged"); signal != nil {
 		(*(*func(int))(signal))(int(int32(newBlockCount)))
 	}
 
 }
 
-//export callbackPlainTextEditb1a9c9_CanInsertFromMimeData
-func callbackPlainTextEditb1a9c9_CanInsertFromMimeData(ptr unsafe.Pointer, source unsafe.Pointer) C.char {
+//export callbackPlainTextEdit209179_CanInsertFromMimeData
+func callbackPlainTextEdit209179_CanInsertFromMimeData(ptr unsafe.Pointer, source unsafe.Pointer) C.char {
 	if signal := qt.GetSignal(ptr, "canInsertFromMimeData"); signal != nil {
 		return C.char(int8(qt.GoBoolToInt((*(*func(*std_core.QMimeData) bool)(signal))(std_core.NewQMimeDataFromPointer(source)))))
 	}
@@ -495,13 +551,13 @@ func callbackPlainTextEditb1a9c9_CanInsertFromMimeData(ptr unsafe.Pointer, sourc
 
 func (ptr *PlainTextEdit) CanInsertFromMimeDataDefault(source std_core.QMimeData_ITF) bool {
 	if ptr.Pointer() != nil {
-		return int8(C.PlainTextEditb1a9c9_CanInsertFromMimeDataDefault(ptr.Pointer(), std_core.PointerFromQMimeData(source))) != 0
+		return int8(C.PlainTextEdit209179_CanInsertFromMimeDataDefault(ptr.Pointer(), std_core.PointerFromQMimeData(source))) != 0
 	}
 	return false
 }
 
-//export callbackPlainTextEditb1a9c9_CenterCursor
-func callbackPlainTextEditb1a9c9_CenterCursor(ptr unsafe.Pointer) {
+//export callbackPlainTextEdit209179_CenterCursor
+func callbackPlainTextEdit209179_CenterCursor(ptr unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "centerCursor"); signal != nil {
 		(*(*func())(signal))()
 	} else {
@@ -511,12 +567,12 @@ func callbackPlainTextEditb1a9c9_CenterCursor(ptr unsafe.Pointer) {
 
 func (ptr *PlainTextEdit) CenterCursorDefault() {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_CenterCursorDefault(ptr.Pointer())
+		C.PlainTextEdit209179_CenterCursorDefault(ptr.Pointer())
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_ChangeEvent
-func callbackPlainTextEditb1a9c9_ChangeEvent(ptr unsafe.Pointer, e unsafe.Pointer) {
+//export callbackPlainTextEdit209179_ChangeEvent
+func callbackPlainTextEdit209179_ChangeEvent(ptr unsafe.Pointer, e unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "changeEvent"); signal != nil {
 		(*(*func(*std_core.QEvent))(signal))(std_core.NewQEventFromPointer(e))
 	} else {
@@ -526,12 +582,12 @@ func callbackPlainTextEditb1a9c9_ChangeEvent(ptr unsafe.Pointer, e unsafe.Pointe
 
 func (ptr *PlainTextEdit) ChangeEventDefault(e std_core.QEvent_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_ChangeEventDefault(ptr.Pointer(), std_core.PointerFromQEvent(e))
+		C.PlainTextEdit209179_ChangeEventDefault(ptr.Pointer(), std_core.PointerFromQEvent(e))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_Clear
-func callbackPlainTextEditb1a9c9_Clear(ptr unsafe.Pointer) {
+//export callbackPlainTextEdit209179_Clear
+func callbackPlainTextEdit209179_Clear(ptr unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "clear"); signal != nil {
 		(*(*func())(signal))()
 	} else {
@@ -541,12 +597,12 @@ func callbackPlainTextEditb1a9c9_Clear(ptr unsafe.Pointer) {
 
 func (ptr *PlainTextEdit) ClearDefault() {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_ClearDefault(ptr.Pointer())
+		C.PlainTextEdit209179_ClearDefault(ptr.Pointer())
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_ContextMenuEvent
-func callbackPlainTextEditb1a9c9_ContextMenuEvent(ptr unsafe.Pointer, event unsafe.Pointer) {
+//export callbackPlainTextEdit209179_ContextMenuEvent
+func callbackPlainTextEdit209179_ContextMenuEvent(ptr unsafe.Pointer, event unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "contextMenuEvent"); signal != nil {
 		(*(*func(*std_gui.QContextMenuEvent))(signal))(std_gui.NewQContextMenuEventFromPointer(event))
 	} else {
@@ -556,12 +612,12 @@ func callbackPlainTextEditb1a9c9_ContextMenuEvent(ptr unsafe.Pointer, event unsa
 
 func (ptr *PlainTextEdit) ContextMenuEventDefault(event std_gui.QContextMenuEvent_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_ContextMenuEventDefault(ptr.Pointer(), std_gui.PointerFromQContextMenuEvent(event))
+		C.PlainTextEdit209179_ContextMenuEventDefault(ptr.Pointer(), std_gui.PointerFromQContextMenuEvent(event))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_Copy
-func callbackPlainTextEditb1a9c9_Copy(ptr unsafe.Pointer) {
+//export callbackPlainTextEdit209179_Copy
+func callbackPlainTextEdit209179_Copy(ptr unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "copy"); signal != nil {
 		(*(*func())(signal))()
 	} else {
@@ -571,20 +627,20 @@ func callbackPlainTextEditb1a9c9_Copy(ptr unsafe.Pointer) {
 
 func (ptr *PlainTextEdit) CopyDefault() {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_CopyDefault(ptr.Pointer())
+		C.PlainTextEdit209179_CopyDefault(ptr.Pointer())
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_CopyAvailable
-func callbackPlainTextEditb1a9c9_CopyAvailable(ptr unsafe.Pointer, yes C.char) {
+//export callbackPlainTextEdit209179_CopyAvailable
+func callbackPlainTextEdit209179_CopyAvailable(ptr unsafe.Pointer, yes C.char) {
 	if signal := qt.GetSignal(ptr, "copyAvailable"); signal != nil {
 		(*(*func(bool))(signal))(int8(yes) != 0)
 	}
 
 }
 
-//export callbackPlainTextEditb1a9c9_CreateMimeDataFromSelection
-func callbackPlainTextEditb1a9c9_CreateMimeDataFromSelection(ptr unsafe.Pointer) unsafe.Pointer {
+//export callbackPlainTextEdit209179_CreateMimeDataFromSelection
+func callbackPlainTextEdit209179_CreateMimeDataFromSelection(ptr unsafe.Pointer) unsafe.Pointer {
 	if signal := qt.GetSignal(ptr, "createMimeDataFromSelection"); signal != nil {
 		return std_core.PointerFromQMimeData((*(*func() *std_core.QMimeData)(signal))())
 	}
@@ -594,7 +650,7 @@ func callbackPlainTextEditb1a9c9_CreateMimeDataFromSelection(ptr unsafe.Pointer)
 
 func (ptr *PlainTextEdit) CreateMimeDataFromSelectionDefault() *std_core.QMimeData {
 	if ptr.Pointer() != nil {
-		tmpValue := std_core.NewQMimeDataFromPointer(C.PlainTextEditb1a9c9_CreateMimeDataFromSelectionDefault(ptr.Pointer()))
+		tmpValue := std_core.NewQMimeDataFromPointer(C.PlainTextEdit209179_CreateMimeDataFromSelectionDefault(ptr.Pointer()))
 		if !qt.ExistsSignal(tmpValue.Pointer(), "destroyed") {
 			tmpValue.ConnectDestroyed(func(*std_core.QObject) { tmpValue.SetPointer(nil) })
 		}
@@ -603,16 +659,16 @@ func (ptr *PlainTextEdit) CreateMimeDataFromSelectionDefault() *std_core.QMimeDa
 	return nil
 }
 
-//export callbackPlainTextEditb1a9c9_CursorPositionChanged
-func callbackPlainTextEditb1a9c9_CursorPositionChanged(ptr unsafe.Pointer) {
+//export callbackPlainTextEdit209179_CursorPositionChanged
+func callbackPlainTextEdit209179_CursorPositionChanged(ptr unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "cursorPositionChanged"); signal != nil {
 		(*(*func())(signal))()
 	}
 
 }
 
-//export callbackPlainTextEditb1a9c9_Cut
-func callbackPlainTextEditb1a9c9_Cut(ptr unsafe.Pointer) {
+//export callbackPlainTextEdit209179_Cut
+func callbackPlainTextEdit209179_Cut(ptr unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "cut"); signal != nil {
 		(*(*func())(signal))()
 	} else {
@@ -622,12 +678,12 @@ func callbackPlainTextEditb1a9c9_Cut(ptr unsafe.Pointer) {
 
 func (ptr *PlainTextEdit) CutDefault() {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_CutDefault(ptr.Pointer())
+		C.PlainTextEdit209179_CutDefault(ptr.Pointer())
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_DragEnterEvent
-func callbackPlainTextEditb1a9c9_DragEnterEvent(ptr unsafe.Pointer, e unsafe.Pointer) {
+//export callbackPlainTextEdit209179_DragEnterEvent
+func callbackPlainTextEdit209179_DragEnterEvent(ptr unsafe.Pointer, e unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "dragEnterEvent"); signal != nil {
 		(*(*func(*std_gui.QDragEnterEvent))(signal))(std_gui.NewQDragEnterEventFromPointer(e))
 	} else {
@@ -637,12 +693,12 @@ func callbackPlainTextEditb1a9c9_DragEnterEvent(ptr unsafe.Pointer, e unsafe.Poi
 
 func (ptr *PlainTextEdit) DragEnterEventDefault(e std_gui.QDragEnterEvent_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_DragEnterEventDefault(ptr.Pointer(), std_gui.PointerFromQDragEnterEvent(e))
+		C.PlainTextEdit209179_DragEnterEventDefault(ptr.Pointer(), std_gui.PointerFromQDragEnterEvent(e))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_DragLeaveEvent
-func callbackPlainTextEditb1a9c9_DragLeaveEvent(ptr unsafe.Pointer, e unsafe.Pointer) {
+//export callbackPlainTextEdit209179_DragLeaveEvent
+func callbackPlainTextEdit209179_DragLeaveEvent(ptr unsafe.Pointer, e unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "dragLeaveEvent"); signal != nil {
 		(*(*func(*std_gui.QDragLeaveEvent))(signal))(std_gui.NewQDragLeaveEventFromPointer(e))
 	} else {
@@ -652,12 +708,12 @@ func callbackPlainTextEditb1a9c9_DragLeaveEvent(ptr unsafe.Pointer, e unsafe.Poi
 
 func (ptr *PlainTextEdit) DragLeaveEventDefault(e std_gui.QDragLeaveEvent_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_DragLeaveEventDefault(ptr.Pointer(), std_gui.PointerFromQDragLeaveEvent(e))
+		C.PlainTextEdit209179_DragLeaveEventDefault(ptr.Pointer(), std_gui.PointerFromQDragLeaveEvent(e))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_DragMoveEvent
-func callbackPlainTextEditb1a9c9_DragMoveEvent(ptr unsafe.Pointer, e unsafe.Pointer) {
+//export callbackPlainTextEdit209179_DragMoveEvent
+func callbackPlainTextEdit209179_DragMoveEvent(ptr unsafe.Pointer, e unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "dragMoveEvent"); signal != nil {
 		(*(*func(*std_gui.QDragMoveEvent))(signal))(std_gui.NewQDragMoveEventFromPointer(e))
 	} else {
@@ -667,12 +723,12 @@ func callbackPlainTextEditb1a9c9_DragMoveEvent(ptr unsafe.Pointer, e unsafe.Poin
 
 func (ptr *PlainTextEdit) DragMoveEventDefault(e std_gui.QDragMoveEvent_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_DragMoveEventDefault(ptr.Pointer(), std_gui.PointerFromQDragMoveEvent(e))
+		C.PlainTextEdit209179_DragMoveEventDefault(ptr.Pointer(), std_gui.PointerFromQDragMoveEvent(e))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_DropEvent
-func callbackPlainTextEditb1a9c9_DropEvent(ptr unsafe.Pointer, e unsafe.Pointer) {
+//export callbackPlainTextEdit209179_DropEvent
+func callbackPlainTextEdit209179_DropEvent(ptr unsafe.Pointer, e unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "dropEvent"); signal != nil {
 		(*(*func(*std_gui.QDropEvent))(signal))(std_gui.NewQDropEventFromPointer(e))
 	} else {
@@ -682,12 +738,12 @@ func callbackPlainTextEditb1a9c9_DropEvent(ptr unsafe.Pointer, e unsafe.Pointer)
 
 func (ptr *PlainTextEdit) DropEventDefault(e std_gui.QDropEvent_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_DropEventDefault(ptr.Pointer(), std_gui.PointerFromQDropEvent(e))
+		C.PlainTextEdit209179_DropEventDefault(ptr.Pointer(), std_gui.PointerFromQDropEvent(e))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_FocusInEvent
-func callbackPlainTextEditb1a9c9_FocusInEvent(ptr unsafe.Pointer, e unsafe.Pointer) {
+//export callbackPlainTextEdit209179_FocusInEvent
+func callbackPlainTextEdit209179_FocusInEvent(ptr unsafe.Pointer, e unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "focusInEvent"); signal != nil {
 		(*(*func(*std_gui.QFocusEvent))(signal))(std_gui.NewQFocusEventFromPointer(e))
 	} else {
@@ -697,12 +753,12 @@ func callbackPlainTextEditb1a9c9_FocusInEvent(ptr unsafe.Pointer, e unsafe.Point
 
 func (ptr *PlainTextEdit) FocusInEventDefault(e std_gui.QFocusEvent_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_FocusInEventDefault(ptr.Pointer(), std_gui.PointerFromQFocusEvent(e))
+		C.PlainTextEdit209179_FocusInEventDefault(ptr.Pointer(), std_gui.PointerFromQFocusEvent(e))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_FocusNextPrevChild
-func callbackPlainTextEditb1a9c9_FocusNextPrevChild(ptr unsafe.Pointer, next C.char) C.char {
+//export callbackPlainTextEdit209179_FocusNextPrevChild
+func callbackPlainTextEdit209179_FocusNextPrevChild(ptr unsafe.Pointer, next C.char) C.char {
 	if signal := qt.GetSignal(ptr, "focusNextPrevChild"); signal != nil {
 		return C.char(int8(qt.GoBoolToInt((*(*func(bool) bool)(signal))(int8(next) != 0))))
 	}
@@ -712,13 +768,13 @@ func callbackPlainTextEditb1a9c9_FocusNextPrevChild(ptr unsafe.Pointer, next C.c
 
 func (ptr *PlainTextEdit) FocusNextPrevChildDefault(next bool) bool {
 	if ptr.Pointer() != nil {
-		return int8(C.PlainTextEditb1a9c9_FocusNextPrevChildDefault(ptr.Pointer(), C.char(int8(qt.GoBoolToInt(next))))) != 0
+		return int8(C.PlainTextEdit209179_FocusNextPrevChildDefault(ptr.Pointer(), C.char(int8(qt.GoBoolToInt(next))))) != 0
 	}
 	return false
 }
 
-//export callbackPlainTextEditb1a9c9_FocusOutEvent
-func callbackPlainTextEditb1a9c9_FocusOutEvent(ptr unsafe.Pointer, e unsafe.Pointer) {
+//export callbackPlainTextEdit209179_FocusOutEvent
+func callbackPlainTextEdit209179_FocusOutEvent(ptr unsafe.Pointer, e unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "focusOutEvent"); signal != nil {
 		(*(*func(*std_gui.QFocusEvent))(signal))(std_gui.NewQFocusEventFromPointer(e))
 	} else {
@@ -728,12 +784,12 @@ func callbackPlainTextEditb1a9c9_FocusOutEvent(ptr unsafe.Pointer, e unsafe.Poin
 
 func (ptr *PlainTextEdit) FocusOutEventDefault(e std_gui.QFocusEvent_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_FocusOutEventDefault(ptr.Pointer(), std_gui.PointerFromQFocusEvent(e))
+		C.PlainTextEdit209179_FocusOutEventDefault(ptr.Pointer(), std_gui.PointerFromQFocusEvent(e))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_InputMethodEvent
-func callbackPlainTextEditb1a9c9_InputMethodEvent(ptr unsafe.Pointer, e unsafe.Pointer) {
+//export callbackPlainTextEdit209179_InputMethodEvent
+func callbackPlainTextEdit209179_InputMethodEvent(ptr unsafe.Pointer, e unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "inputMethodEvent"); signal != nil {
 		(*(*func(*std_gui.QInputMethodEvent))(signal))(std_gui.NewQInputMethodEventFromPointer(e))
 	} else {
@@ -743,12 +799,12 @@ func callbackPlainTextEditb1a9c9_InputMethodEvent(ptr unsafe.Pointer, e unsafe.P
 
 func (ptr *PlainTextEdit) InputMethodEventDefault(e std_gui.QInputMethodEvent_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_InputMethodEventDefault(ptr.Pointer(), std_gui.PointerFromQInputMethodEvent(e))
+		C.PlainTextEdit209179_InputMethodEventDefault(ptr.Pointer(), std_gui.PointerFromQInputMethodEvent(e))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_InputMethodQuery
-func callbackPlainTextEditb1a9c9_InputMethodQuery(ptr unsafe.Pointer, property C.longlong) unsafe.Pointer {
+//export callbackPlainTextEdit209179_InputMethodQuery
+func callbackPlainTextEdit209179_InputMethodQuery(ptr unsafe.Pointer, property C.longlong) unsafe.Pointer {
 	if signal := qt.GetSignal(ptr, "inputMethodQuery"); signal != nil {
 		return std_core.PointerFromQVariant((*(*func(std_core.Qt__InputMethodQuery) *std_core.QVariant)(signal))(std_core.Qt__InputMethodQuery(property)))
 	}
@@ -758,15 +814,15 @@ func callbackPlainTextEditb1a9c9_InputMethodQuery(ptr unsafe.Pointer, property C
 
 func (ptr *PlainTextEdit) InputMethodQueryDefault(property std_core.Qt__InputMethodQuery) *std_core.QVariant {
 	if ptr.Pointer() != nil {
-		tmpValue := std_core.NewQVariantFromPointer(C.PlainTextEditb1a9c9_InputMethodQueryDefault(ptr.Pointer(), C.longlong(property)))
+		tmpValue := std_core.NewQVariantFromPointer(C.PlainTextEdit209179_InputMethodQueryDefault(ptr.Pointer(), C.longlong(property)))
 		qt.SetFinalizer(tmpValue, (*std_core.QVariant).DestroyQVariant)
 		return tmpValue
 	}
 	return nil
 }
 
-//export callbackPlainTextEditb1a9c9_InsertFromMimeData
-func callbackPlainTextEditb1a9c9_InsertFromMimeData(ptr unsafe.Pointer, source unsafe.Pointer) {
+//export callbackPlainTextEdit209179_InsertFromMimeData
+func callbackPlainTextEdit209179_InsertFromMimeData(ptr unsafe.Pointer, source unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "insertFromMimeData"); signal != nil {
 		(*(*func(*std_core.QMimeData))(signal))(std_core.NewQMimeDataFromPointer(source))
 	} else {
@@ -776,12 +832,12 @@ func callbackPlainTextEditb1a9c9_InsertFromMimeData(ptr unsafe.Pointer, source u
 
 func (ptr *PlainTextEdit) InsertFromMimeDataDefault(source std_core.QMimeData_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_InsertFromMimeDataDefault(ptr.Pointer(), std_core.PointerFromQMimeData(source))
+		C.PlainTextEdit209179_InsertFromMimeDataDefault(ptr.Pointer(), std_core.PointerFromQMimeData(source))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_InsertPlainText
-func callbackPlainTextEditb1a9c9_InsertPlainText(ptr unsafe.Pointer, text C.struct_Moc_PackedString) {
+//export callbackPlainTextEdit209179_InsertPlainText
+func callbackPlainTextEdit209179_InsertPlainText(ptr unsafe.Pointer, text C.struct_Moc_PackedString) {
 	if signal := qt.GetSignal(ptr, "insertPlainText"); signal != nil {
 		(*(*func(string))(signal))(cGoUnpackString(text))
 	} else {
@@ -796,12 +852,12 @@ func (ptr *PlainTextEdit) InsertPlainTextDefault(text string) {
 			textC = C.CString(text)
 			defer C.free(unsafe.Pointer(textC))
 		}
-		C.PlainTextEditb1a9c9_InsertPlainTextDefault(ptr.Pointer(), C.struct_Moc_PackedString{data: textC, len: C.longlong(len(text))})
+		C.PlainTextEdit209179_InsertPlainTextDefault(ptr.Pointer(), C.struct_Moc_PackedString{data: textC, len: C.longlong(len(text))})
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_KeyPressEvent
-func callbackPlainTextEditb1a9c9_KeyPressEvent(ptr unsafe.Pointer, e unsafe.Pointer) {
+//export callbackPlainTextEdit209179_KeyPressEvent
+func callbackPlainTextEdit209179_KeyPressEvent(ptr unsafe.Pointer, e unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "keyPressEvent"); signal != nil {
 		(*(*func(*std_gui.QKeyEvent))(signal))(std_gui.NewQKeyEventFromPointer(e))
 	} else {
@@ -811,12 +867,12 @@ func callbackPlainTextEditb1a9c9_KeyPressEvent(ptr unsafe.Pointer, e unsafe.Poin
 
 func (ptr *PlainTextEdit) KeyPressEventDefault(e std_gui.QKeyEvent_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_KeyPressEventDefault(ptr.Pointer(), std_gui.PointerFromQKeyEvent(e))
+		C.PlainTextEdit209179_KeyPressEventDefault(ptr.Pointer(), std_gui.PointerFromQKeyEvent(e))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_KeyReleaseEvent
-func callbackPlainTextEditb1a9c9_KeyReleaseEvent(ptr unsafe.Pointer, e unsafe.Pointer) {
+//export callbackPlainTextEdit209179_KeyReleaseEvent
+func callbackPlainTextEdit209179_KeyReleaseEvent(ptr unsafe.Pointer, e unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "keyReleaseEvent"); signal != nil {
 		(*(*func(*std_gui.QKeyEvent))(signal))(std_gui.NewQKeyEventFromPointer(e))
 	} else {
@@ -826,12 +882,12 @@ func callbackPlainTextEditb1a9c9_KeyReleaseEvent(ptr unsafe.Pointer, e unsafe.Po
 
 func (ptr *PlainTextEdit) KeyReleaseEventDefault(e std_gui.QKeyEvent_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_KeyReleaseEventDefault(ptr.Pointer(), std_gui.PointerFromQKeyEvent(e))
+		C.PlainTextEdit209179_KeyReleaseEventDefault(ptr.Pointer(), std_gui.PointerFromQKeyEvent(e))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_LoadResource
-func callbackPlainTextEditb1a9c9_LoadResource(ptr unsafe.Pointer, ty C.int, name unsafe.Pointer) unsafe.Pointer {
+//export callbackPlainTextEdit209179_LoadResource
+func callbackPlainTextEdit209179_LoadResource(ptr unsafe.Pointer, ty C.int, name unsafe.Pointer) unsafe.Pointer {
 	if signal := qt.GetSignal(ptr, "loadResource"); signal != nil {
 		return std_core.PointerFromQVariant((*(*func(int, *std_core.QUrl) *std_core.QVariant)(signal))(int(int32(ty)), std_core.NewQUrlFromPointer(name)))
 	}
@@ -841,23 +897,23 @@ func callbackPlainTextEditb1a9c9_LoadResource(ptr unsafe.Pointer, ty C.int, name
 
 func (ptr *PlainTextEdit) LoadResourceDefault(ty int, name std_core.QUrl_ITF) *std_core.QVariant {
 	if ptr.Pointer() != nil {
-		tmpValue := std_core.NewQVariantFromPointer(C.PlainTextEditb1a9c9_LoadResourceDefault(ptr.Pointer(), C.int(int32(ty)), std_core.PointerFromQUrl(name)))
+		tmpValue := std_core.NewQVariantFromPointer(C.PlainTextEdit209179_LoadResourceDefault(ptr.Pointer(), C.int(int32(ty)), std_core.PointerFromQUrl(name)))
 		qt.SetFinalizer(tmpValue, (*std_core.QVariant).DestroyQVariant)
 		return tmpValue
 	}
 	return nil
 }
 
-//export callbackPlainTextEditb1a9c9_ModificationChanged
-func callbackPlainTextEditb1a9c9_ModificationChanged(ptr unsafe.Pointer, changed C.char) {
+//export callbackPlainTextEdit209179_ModificationChanged
+func callbackPlainTextEdit209179_ModificationChanged(ptr unsafe.Pointer, changed C.char) {
 	if signal := qt.GetSignal(ptr, "modificationChanged"); signal != nil {
 		(*(*func(bool))(signal))(int8(changed) != 0)
 	}
 
 }
 
-//export callbackPlainTextEditb1a9c9_MouseDoubleClickEvent
-func callbackPlainTextEditb1a9c9_MouseDoubleClickEvent(ptr unsafe.Pointer, e unsafe.Pointer) {
+//export callbackPlainTextEdit209179_MouseDoubleClickEvent
+func callbackPlainTextEdit209179_MouseDoubleClickEvent(ptr unsafe.Pointer, e unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "mouseDoubleClickEvent"); signal != nil {
 		(*(*func(*std_gui.QMouseEvent))(signal))(std_gui.NewQMouseEventFromPointer(e))
 	} else {
@@ -867,12 +923,12 @@ func callbackPlainTextEditb1a9c9_MouseDoubleClickEvent(ptr unsafe.Pointer, e uns
 
 func (ptr *PlainTextEdit) MouseDoubleClickEventDefault(e std_gui.QMouseEvent_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_MouseDoubleClickEventDefault(ptr.Pointer(), std_gui.PointerFromQMouseEvent(e))
+		C.PlainTextEdit209179_MouseDoubleClickEventDefault(ptr.Pointer(), std_gui.PointerFromQMouseEvent(e))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_MouseMoveEvent
-func callbackPlainTextEditb1a9c9_MouseMoveEvent(ptr unsafe.Pointer, e unsafe.Pointer) {
+//export callbackPlainTextEdit209179_MouseMoveEvent
+func callbackPlainTextEdit209179_MouseMoveEvent(ptr unsafe.Pointer, e unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "mouseMoveEvent"); signal != nil {
 		(*(*func(*std_gui.QMouseEvent))(signal))(std_gui.NewQMouseEventFromPointer(e))
 	} else {
@@ -882,12 +938,12 @@ func callbackPlainTextEditb1a9c9_MouseMoveEvent(ptr unsafe.Pointer, e unsafe.Poi
 
 func (ptr *PlainTextEdit) MouseMoveEventDefault(e std_gui.QMouseEvent_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_MouseMoveEventDefault(ptr.Pointer(), std_gui.PointerFromQMouseEvent(e))
+		C.PlainTextEdit209179_MouseMoveEventDefault(ptr.Pointer(), std_gui.PointerFromQMouseEvent(e))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_MousePressEvent
-func callbackPlainTextEditb1a9c9_MousePressEvent(ptr unsafe.Pointer, e unsafe.Pointer) {
+//export callbackPlainTextEdit209179_MousePressEvent
+func callbackPlainTextEdit209179_MousePressEvent(ptr unsafe.Pointer, e unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "mousePressEvent"); signal != nil {
 		(*(*func(*std_gui.QMouseEvent))(signal))(std_gui.NewQMouseEventFromPointer(e))
 	} else {
@@ -897,12 +953,12 @@ func callbackPlainTextEditb1a9c9_MousePressEvent(ptr unsafe.Pointer, e unsafe.Po
 
 func (ptr *PlainTextEdit) MousePressEventDefault(e std_gui.QMouseEvent_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_MousePressEventDefault(ptr.Pointer(), std_gui.PointerFromQMouseEvent(e))
+		C.PlainTextEdit209179_MousePressEventDefault(ptr.Pointer(), std_gui.PointerFromQMouseEvent(e))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_MouseReleaseEvent
-func callbackPlainTextEditb1a9c9_MouseReleaseEvent(ptr unsafe.Pointer, e unsafe.Pointer) {
+//export callbackPlainTextEdit209179_MouseReleaseEvent
+func callbackPlainTextEdit209179_MouseReleaseEvent(ptr unsafe.Pointer, e unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "mouseReleaseEvent"); signal != nil {
 		(*(*func(*std_gui.QMouseEvent))(signal))(std_gui.NewQMouseEventFromPointer(e))
 	} else {
@@ -912,12 +968,12 @@ func callbackPlainTextEditb1a9c9_MouseReleaseEvent(ptr unsafe.Pointer, e unsafe.
 
 func (ptr *PlainTextEdit) MouseReleaseEventDefault(e std_gui.QMouseEvent_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_MouseReleaseEventDefault(ptr.Pointer(), std_gui.PointerFromQMouseEvent(e))
+		C.PlainTextEdit209179_MouseReleaseEventDefault(ptr.Pointer(), std_gui.PointerFromQMouseEvent(e))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_PaintEvent
-func callbackPlainTextEditb1a9c9_PaintEvent(ptr unsafe.Pointer, e unsafe.Pointer) {
+//export callbackPlainTextEdit209179_PaintEvent
+func callbackPlainTextEdit209179_PaintEvent(ptr unsafe.Pointer, e unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "paintEvent"); signal != nil {
 		(*(*func(*std_gui.QPaintEvent))(signal))(std_gui.NewQPaintEventFromPointer(e))
 	} else {
@@ -927,12 +983,12 @@ func callbackPlainTextEditb1a9c9_PaintEvent(ptr unsafe.Pointer, e unsafe.Pointer
 
 func (ptr *PlainTextEdit) PaintEventDefault(e std_gui.QPaintEvent_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_PaintEventDefault(ptr.Pointer(), std_gui.PointerFromQPaintEvent(e))
+		C.PlainTextEdit209179_PaintEventDefault(ptr.Pointer(), std_gui.PointerFromQPaintEvent(e))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_Paste
-func callbackPlainTextEditb1a9c9_Paste(ptr unsafe.Pointer) {
+//export callbackPlainTextEdit209179_Paste
+func callbackPlainTextEdit209179_Paste(ptr unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "paste"); signal != nil {
 		(*(*func())(signal))()
 	} else {
@@ -942,12 +998,12 @@ func callbackPlainTextEditb1a9c9_Paste(ptr unsafe.Pointer) {
 
 func (ptr *PlainTextEdit) PasteDefault() {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_PasteDefault(ptr.Pointer())
+		C.PlainTextEdit209179_PasteDefault(ptr.Pointer())
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_Redo
-func callbackPlainTextEditb1a9c9_Redo(ptr unsafe.Pointer) {
+//export callbackPlainTextEdit209179_Redo
+func callbackPlainTextEdit209179_Redo(ptr unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "redo"); signal != nil {
 		(*(*func())(signal))()
 	} else {
@@ -957,20 +1013,20 @@ func callbackPlainTextEditb1a9c9_Redo(ptr unsafe.Pointer) {
 
 func (ptr *PlainTextEdit) RedoDefault() {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_RedoDefault(ptr.Pointer())
+		C.PlainTextEdit209179_RedoDefault(ptr.Pointer())
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_RedoAvailable
-func callbackPlainTextEditb1a9c9_RedoAvailable(ptr unsafe.Pointer, available C.char) {
+//export callbackPlainTextEdit209179_RedoAvailable
+func callbackPlainTextEdit209179_RedoAvailable(ptr unsafe.Pointer, available C.char) {
 	if signal := qt.GetSignal(ptr, "redoAvailable"); signal != nil {
 		(*(*func(bool))(signal))(int8(available) != 0)
 	}
 
 }
 
-//export callbackPlainTextEditb1a9c9_ResizeEvent
-func callbackPlainTextEditb1a9c9_ResizeEvent(ptr unsafe.Pointer, e unsafe.Pointer) {
+//export callbackPlainTextEdit209179_ResizeEvent
+func callbackPlainTextEdit209179_ResizeEvent(ptr unsafe.Pointer, e unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "resizeEvent"); signal != nil {
 		(*(*func(*std_gui.QResizeEvent))(signal))(std_gui.NewQResizeEventFromPointer(e))
 	} else {
@@ -980,12 +1036,12 @@ func callbackPlainTextEditb1a9c9_ResizeEvent(ptr unsafe.Pointer, e unsafe.Pointe
 
 func (ptr *PlainTextEdit) ResizeEventDefault(e std_gui.QResizeEvent_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_ResizeEventDefault(ptr.Pointer(), std_gui.PointerFromQResizeEvent(e))
+		C.PlainTextEdit209179_ResizeEventDefault(ptr.Pointer(), std_gui.PointerFromQResizeEvent(e))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_ScrollContentsBy
-func callbackPlainTextEditb1a9c9_ScrollContentsBy(ptr unsafe.Pointer, dx C.int, dy C.int) {
+//export callbackPlainTextEdit209179_ScrollContentsBy
+func callbackPlainTextEdit209179_ScrollContentsBy(ptr unsafe.Pointer, dx C.int, dy C.int) {
 	if signal := qt.GetSignal(ptr, "scrollContentsBy"); signal != nil {
 		(*(*func(int, int))(signal))(int(int32(dx)), int(int32(dy)))
 	} else {
@@ -995,12 +1051,12 @@ func callbackPlainTextEditb1a9c9_ScrollContentsBy(ptr unsafe.Pointer, dx C.int, 
 
 func (ptr *PlainTextEdit) ScrollContentsByDefault(dx int, dy int) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_ScrollContentsByDefault(ptr.Pointer(), C.int(int32(dx)), C.int(int32(dy)))
+		C.PlainTextEdit209179_ScrollContentsByDefault(ptr.Pointer(), C.int(int32(dx)), C.int(int32(dy)))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_SelectAll
-func callbackPlainTextEditb1a9c9_SelectAll(ptr unsafe.Pointer) {
+//export callbackPlainTextEdit209179_SelectAll
+func callbackPlainTextEdit209179_SelectAll(ptr unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "selectAll"); signal != nil {
 		(*(*func())(signal))()
 	} else {
@@ -1010,20 +1066,20 @@ func callbackPlainTextEditb1a9c9_SelectAll(ptr unsafe.Pointer) {
 
 func (ptr *PlainTextEdit) SelectAllDefault() {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_SelectAllDefault(ptr.Pointer())
+		C.PlainTextEdit209179_SelectAllDefault(ptr.Pointer())
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_SelectionChanged
-func callbackPlainTextEditb1a9c9_SelectionChanged(ptr unsafe.Pointer) {
+//export callbackPlainTextEdit209179_SelectionChanged
+func callbackPlainTextEdit209179_SelectionChanged(ptr unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "selectionChanged"); signal != nil {
 		(*(*func())(signal))()
 	}
 
 }
 
-//export callbackPlainTextEditb1a9c9_SetPlainText
-func callbackPlainTextEditb1a9c9_SetPlainText(ptr unsafe.Pointer, text C.struct_Moc_PackedString) {
+//export callbackPlainTextEdit209179_SetPlainText
+func callbackPlainTextEdit209179_SetPlainText(ptr unsafe.Pointer, text C.struct_Moc_PackedString) {
 	if signal := qt.GetSignal(ptr, "setPlainText"); signal != nil {
 		(*(*func(string))(signal))(cGoUnpackString(text))
 	} else {
@@ -1038,12 +1094,12 @@ func (ptr *PlainTextEdit) SetPlainTextDefault(text string) {
 			textC = C.CString(text)
 			defer C.free(unsafe.Pointer(textC))
 		}
-		C.PlainTextEditb1a9c9_SetPlainTextDefault(ptr.Pointer(), C.struct_Moc_PackedString{data: textC, len: C.longlong(len(text))})
+		C.PlainTextEdit209179_SetPlainTextDefault(ptr.Pointer(), C.struct_Moc_PackedString{data: textC, len: C.longlong(len(text))})
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_ShowEvent
-func callbackPlainTextEditb1a9c9_ShowEvent(ptr unsafe.Pointer, vqs unsafe.Pointer) {
+//export callbackPlainTextEdit209179_ShowEvent
+func callbackPlainTextEdit209179_ShowEvent(ptr unsafe.Pointer, vqs unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "showEvent"); signal != nil {
 		(*(*func(*std_gui.QShowEvent))(signal))(std_gui.NewQShowEventFromPointer(vqs))
 	} else {
@@ -1053,20 +1109,20 @@ func callbackPlainTextEditb1a9c9_ShowEvent(ptr unsafe.Pointer, vqs unsafe.Pointe
 
 func (ptr *PlainTextEdit) ShowEventDefault(vqs std_gui.QShowEvent_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_ShowEventDefault(ptr.Pointer(), std_gui.PointerFromQShowEvent(vqs))
+		C.PlainTextEdit209179_ShowEventDefault(ptr.Pointer(), std_gui.PointerFromQShowEvent(vqs))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_TextChanged
-func callbackPlainTextEditb1a9c9_TextChanged(ptr unsafe.Pointer) {
+//export callbackPlainTextEdit209179_TextChanged
+func callbackPlainTextEdit209179_TextChanged(ptr unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "textChanged"); signal != nil {
 		(*(*func())(signal))()
 	}
 
 }
 
-//export callbackPlainTextEditb1a9c9_Undo
-func callbackPlainTextEditb1a9c9_Undo(ptr unsafe.Pointer) {
+//export callbackPlainTextEdit209179_Undo
+func callbackPlainTextEdit209179_Undo(ptr unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "undo"); signal != nil {
 		(*(*func())(signal))()
 	} else {
@@ -1076,28 +1132,28 @@ func callbackPlainTextEditb1a9c9_Undo(ptr unsafe.Pointer) {
 
 func (ptr *PlainTextEdit) UndoDefault() {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_UndoDefault(ptr.Pointer())
+		C.PlainTextEdit209179_UndoDefault(ptr.Pointer())
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_UndoAvailable
-func callbackPlainTextEditb1a9c9_UndoAvailable(ptr unsafe.Pointer, available C.char) {
+//export callbackPlainTextEdit209179_UndoAvailable
+func callbackPlainTextEdit209179_UndoAvailable(ptr unsafe.Pointer, available C.char) {
 	if signal := qt.GetSignal(ptr, "undoAvailable"); signal != nil {
 		(*(*func(bool))(signal))(int8(available) != 0)
 	}
 
 }
 
-//export callbackPlainTextEditb1a9c9_UpdateRequest
-func callbackPlainTextEditb1a9c9_UpdateRequest(ptr unsafe.Pointer, rect unsafe.Pointer, dy C.int) {
+//export callbackPlainTextEdit209179_UpdateRequest
+func callbackPlainTextEdit209179_UpdateRequest(ptr unsafe.Pointer, rect unsafe.Pointer, dy C.int) {
 	if signal := qt.GetSignal(ptr, "updateRequest"); signal != nil {
 		(*(*func(*std_core.QRect, int))(signal))(std_core.NewQRectFromPointer(rect), int(int32(dy)))
 	}
 
 }
 
-//export callbackPlainTextEditb1a9c9_WheelEvent
-func callbackPlainTextEditb1a9c9_WheelEvent(ptr unsafe.Pointer, e unsafe.Pointer) {
+//export callbackPlainTextEdit209179_WheelEvent
+func callbackPlainTextEdit209179_WheelEvent(ptr unsafe.Pointer, e unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "wheelEvent"); signal != nil {
 		(*(*func(*std_gui.QWheelEvent))(signal))(std_gui.NewQWheelEventFromPointer(e))
 	} else {
@@ -1107,12 +1163,12 @@ func callbackPlainTextEditb1a9c9_WheelEvent(ptr unsafe.Pointer, e unsafe.Pointer
 
 func (ptr *PlainTextEdit) WheelEventDefault(e std_gui.QWheelEvent_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_WheelEventDefault(ptr.Pointer(), std_gui.PointerFromQWheelEvent(e))
+		C.PlainTextEdit209179_WheelEventDefault(ptr.Pointer(), std_gui.PointerFromQWheelEvent(e))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_ZoomIn
-func callbackPlainTextEditb1a9c9_ZoomIn(ptr unsafe.Pointer, ran C.int) {
+//export callbackPlainTextEdit209179_ZoomIn
+func callbackPlainTextEdit209179_ZoomIn(ptr unsafe.Pointer, ran C.int) {
 	if signal := qt.GetSignal(ptr, "zoomIn"); signal != nil {
 		(*(*func(int))(signal))(int(int32(ran)))
 	} else {
@@ -1122,12 +1178,12 @@ func callbackPlainTextEditb1a9c9_ZoomIn(ptr unsafe.Pointer, ran C.int) {
 
 func (ptr *PlainTextEdit) ZoomInDefault(ran int) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_ZoomInDefault(ptr.Pointer(), C.int(int32(ran)))
+		C.PlainTextEdit209179_ZoomInDefault(ptr.Pointer(), C.int(int32(ran)))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_ZoomOut
-func callbackPlainTextEditb1a9c9_ZoomOut(ptr unsafe.Pointer, ran C.int) {
+//export callbackPlainTextEdit209179_ZoomOut
+func callbackPlainTextEdit209179_ZoomOut(ptr unsafe.Pointer, ran C.int) {
 	if signal := qt.GetSignal(ptr, "zoomOut"); signal != nil {
 		(*(*func(int))(signal))(int(int32(ran)))
 	} else {
@@ -1137,12 +1193,12 @@ func callbackPlainTextEditb1a9c9_ZoomOut(ptr unsafe.Pointer, ran C.int) {
 
 func (ptr *PlainTextEdit) ZoomOutDefault(ran int) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_ZoomOutDefault(ptr.Pointer(), C.int(int32(ran)))
+		C.PlainTextEdit209179_ZoomOutDefault(ptr.Pointer(), C.int(int32(ran)))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_Event
-func callbackPlainTextEditb1a9c9_Event(ptr unsafe.Pointer, event unsafe.Pointer) C.char {
+//export callbackPlainTextEdit209179_Event
+func callbackPlainTextEdit209179_Event(ptr unsafe.Pointer, event unsafe.Pointer) C.char {
 	if signal := qt.GetSignal(ptr, "event"); signal != nil {
 		return C.char(int8(qt.GoBoolToInt((*(*func(*std_core.QEvent) bool)(signal))(std_core.NewQEventFromPointer(event)))))
 	}
@@ -1152,13 +1208,13 @@ func callbackPlainTextEditb1a9c9_Event(ptr unsafe.Pointer, event unsafe.Pointer)
 
 func (ptr *PlainTextEdit) EventDefault(event std_core.QEvent_ITF) bool {
 	if ptr.Pointer() != nil {
-		return int8(C.PlainTextEditb1a9c9_EventDefault(ptr.Pointer(), std_core.PointerFromQEvent(event))) != 0
+		return int8(C.PlainTextEdit209179_EventDefault(ptr.Pointer(), std_core.PointerFromQEvent(event))) != 0
 	}
 	return false
 }
 
-//export callbackPlainTextEditb1a9c9_MinimumSizeHint
-func callbackPlainTextEditb1a9c9_MinimumSizeHint(ptr unsafe.Pointer) unsafe.Pointer {
+//export callbackPlainTextEdit209179_MinimumSizeHint
+func callbackPlainTextEdit209179_MinimumSizeHint(ptr unsafe.Pointer) unsafe.Pointer {
 	if signal := qt.GetSignal(ptr, "minimumSizeHint"); signal != nil {
 		return std_core.PointerFromQSize((*(*func() *std_core.QSize)(signal))())
 	}
@@ -1168,15 +1224,15 @@ func callbackPlainTextEditb1a9c9_MinimumSizeHint(ptr unsafe.Pointer) unsafe.Poin
 
 func (ptr *PlainTextEdit) MinimumSizeHintDefault() *std_core.QSize {
 	if ptr.Pointer() != nil {
-		tmpValue := std_core.NewQSizeFromPointer(C.PlainTextEditb1a9c9_MinimumSizeHintDefault(ptr.Pointer()))
+		tmpValue := std_core.NewQSizeFromPointer(C.PlainTextEdit209179_MinimumSizeHintDefault(ptr.Pointer()))
 		qt.SetFinalizer(tmpValue, (*std_core.QSize).DestroyQSize)
 		return tmpValue
 	}
 	return nil
 }
 
-//export callbackPlainTextEditb1a9c9_SetupViewport
-func callbackPlainTextEditb1a9c9_SetupViewport(ptr unsafe.Pointer, viewport unsafe.Pointer) {
+//export callbackPlainTextEdit209179_SetupViewport
+func callbackPlainTextEdit209179_SetupViewport(ptr unsafe.Pointer, viewport unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "setupViewport"); signal != nil {
 		(*(*func(*std_widgets.QWidget))(signal))(std_widgets.NewQWidgetFromPointer(viewport))
 	} else {
@@ -1186,12 +1242,12 @@ func callbackPlainTextEditb1a9c9_SetupViewport(ptr unsafe.Pointer, viewport unsa
 
 func (ptr *PlainTextEdit) SetupViewportDefault(viewport std_widgets.QWidget_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_SetupViewportDefault(ptr.Pointer(), std_widgets.PointerFromQWidget(viewport))
+		C.PlainTextEdit209179_SetupViewportDefault(ptr.Pointer(), std_widgets.PointerFromQWidget(viewport))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_SizeHint
-func callbackPlainTextEditb1a9c9_SizeHint(ptr unsafe.Pointer) unsafe.Pointer {
+//export callbackPlainTextEdit209179_SizeHint
+func callbackPlainTextEdit209179_SizeHint(ptr unsafe.Pointer) unsafe.Pointer {
 	if signal := qt.GetSignal(ptr, "sizeHint"); signal != nil {
 		return std_core.PointerFromQSize((*(*func() *std_core.QSize)(signal))())
 	}
@@ -1201,15 +1257,15 @@ func callbackPlainTextEditb1a9c9_SizeHint(ptr unsafe.Pointer) unsafe.Pointer {
 
 func (ptr *PlainTextEdit) SizeHintDefault() *std_core.QSize {
 	if ptr.Pointer() != nil {
-		tmpValue := std_core.NewQSizeFromPointer(C.PlainTextEditb1a9c9_SizeHintDefault(ptr.Pointer()))
+		tmpValue := std_core.NewQSizeFromPointer(C.PlainTextEdit209179_SizeHintDefault(ptr.Pointer()))
 		qt.SetFinalizer(tmpValue, (*std_core.QSize).DestroyQSize)
 		return tmpValue
 	}
 	return nil
 }
 
-//export callbackPlainTextEditb1a9c9_ViewportEvent
-func callbackPlainTextEditb1a9c9_ViewportEvent(ptr unsafe.Pointer, event unsafe.Pointer) C.char {
+//export callbackPlainTextEdit209179_ViewportEvent
+func callbackPlainTextEdit209179_ViewportEvent(ptr unsafe.Pointer, event unsafe.Pointer) C.char {
 	if signal := qt.GetSignal(ptr, "viewportEvent"); signal != nil {
 		return C.char(int8(qt.GoBoolToInt((*(*func(*std_core.QEvent) bool)(signal))(std_core.NewQEventFromPointer(event)))))
 	}
@@ -1219,13 +1275,13 @@ func callbackPlainTextEditb1a9c9_ViewportEvent(ptr unsafe.Pointer, event unsafe.
 
 func (ptr *PlainTextEdit) ViewportEventDefault(event std_core.QEvent_ITF) bool {
 	if ptr.Pointer() != nil {
-		return int8(C.PlainTextEditb1a9c9_ViewportEventDefault(ptr.Pointer(), std_core.PointerFromQEvent(event))) != 0
+		return int8(C.PlainTextEdit209179_ViewportEventDefault(ptr.Pointer(), std_core.PointerFromQEvent(event))) != 0
 	}
 	return false
 }
 
-//export callbackPlainTextEditb1a9c9_ViewportSizeHint
-func callbackPlainTextEditb1a9c9_ViewportSizeHint(ptr unsafe.Pointer) unsafe.Pointer {
+//export callbackPlainTextEdit209179_ViewportSizeHint
+func callbackPlainTextEdit209179_ViewportSizeHint(ptr unsafe.Pointer) unsafe.Pointer {
 	if signal := qt.GetSignal(ptr, "viewportSizeHint"); signal != nil {
 		return std_core.PointerFromQSize((*(*func() *std_core.QSize)(signal))())
 	}
@@ -1235,15 +1291,15 @@ func callbackPlainTextEditb1a9c9_ViewportSizeHint(ptr unsafe.Pointer) unsafe.Poi
 
 func (ptr *PlainTextEdit) ViewportSizeHintDefault() *std_core.QSize {
 	if ptr.Pointer() != nil {
-		tmpValue := std_core.NewQSizeFromPointer(C.PlainTextEditb1a9c9_ViewportSizeHintDefault(ptr.Pointer()))
+		tmpValue := std_core.NewQSizeFromPointer(C.PlainTextEdit209179_ViewportSizeHintDefault(ptr.Pointer()))
 		qt.SetFinalizer(tmpValue, (*std_core.QSize).DestroyQSize)
 		return tmpValue
 	}
 	return nil
 }
 
-//export callbackPlainTextEditb1a9c9_ActionEvent
-func callbackPlainTextEditb1a9c9_ActionEvent(ptr unsafe.Pointer, event unsafe.Pointer) {
+//export callbackPlainTextEdit209179_ActionEvent
+func callbackPlainTextEdit209179_ActionEvent(ptr unsafe.Pointer, event unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "actionEvent"); signal != nil {
 		(*(*func(*std_gui.QActionEvent))(signal))(std_gui.NewQActionEventFromPointer(event))
 	} else {
@@ -1253,12 +1309,12 @@ func callbackPlainTextEditb1a9c9_ActionEvent(ptr unsafe.Pointer, event unsafe.Po
 
 func (ptr *PlainTextEdit) ActionEventDefault(event std_gui.QActionEvent_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_ActionEventDefault(ptr.Pointer(), std_gui.PointerFromQActionEvent(event))
+		C.PlainTextEdit209179_ActionEventDefault(ptr.Pointer(), std_gui.PointerFromQActionEvent(event))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_Close
-func callbackPlainTextEditb1a9c9_Close(ptr unsafe.Pointer) C.char {
+//export callbackPlainTextEdit209179_Close
+func callbackPlainTextEdit209179_Close(ptr unsafe.Pointer) C.char {
 	if signal := qt.GetSignal(ptr, "close"); signal != nil {
 		return C.char(int8(qt.GoBoolToInt((*(*func() bool)(signal))())))
 	}
@@ -1268,13 +1324,13 @@ func callbackPlainTextEditb1a9c9_Close(ptr unsafe.Pointer) C.char {
 
 func (ptr *PlainTextEdit) CloseDefault() bool {
 	if ptr.Pointer() != nil {
-		return int8(C.PlainTextEditb1a9c9_CloseDefault(ptr.Pointer())) != 0
+		return int8(C.PlainTextEdit209179_CloseDefault(ptr.Pointer())) != 0
 	}
 	return false
 }
 
-//export callbackPlainTextEditb1a9c9_CloseEvent
-func callbackPlainTextEditb1a9c9_CloseEvent(ptr unsafe.Pointer, event unsafe.Pointer) {
+//export callbackPlainTextEdit209179_CloseEvent
+func callbackPlainTextEdit209179_CloseEvent(ptr unsafe.Pointer, event unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "closeEvent"); signal != nil {
 		(*(*func(*std_gui.QCloseEvent))(signal))(std_gui.NewQCloseEventFromPointer(event))
 	} else {
@@ -1284,20 +1340,20 @@ func callbackPlainTextEditb1a9c9_CloseEvent(ptr unsafe.Pointer, event unsafe.Poi
 
 func (ptr *PlainTextEdit) CloseEventDefault(event std_gui.QCloseEvent_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_CloseEventDefault(ptr.Pointer(), std_gui.PointerFromQCloseEvent(event))
+		C.PlainTextEdit209179_CloseEventDefault(ptr.Pointer(), std_gui.PointerFromQCloseEvent(event))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_CustomContextMenuRequested
-func callbackPlainTextEditb1a9c9_CustomContextMenuRequested(ptr unsafe.Pointer, pos unsafe.Pointer) {
+//export callbackPlainTextEdit209179_CustomContextMenuRequested
+func callbackPlainTextEdit209179_CustomContextMenuRequested(ptr unsafe.Pointer, pos unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "customContextMenuRequested"); signal != nil {
 		(*(*func(*std_core.QPoint))(signal))(std_core.NewQPointFromPointer(pos))
 	}
 
 }
 
-//export callbackPlainTextEditb1a9c9_EnterEvent
-func callbackPlainTextEditb1a9c9_EnterEvent(ptr unsafe.Pointer, event unsafe.Pointer) {
+//export callbackPlainTextEdit209179_EnterEvent
+func callbackPlainTextEdit209179_EnterEvent(ptr unsafe.Pointer, event unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "enterEvent"); signal != nil {
 		(*(*func(*std_core.QEvent))(signal))(std_core.NewQEventFromPointer(event))
 	} else {
@@ -1307,12 +1363,12 @@ func callbackPlainTextEditb1a9c9_EnterEvent(ptr unsafe.Pointer, event unsafe.Poi
 
 func (ptr *PlainTextEdit) EnterEventDefault(event std_core.QEvent_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_EnterEventDefault(ptr.Pointer(), std_core.PointerFromQEvent(event))
+		C.PlainTextEdit209179_EnterEventDefault(ptr.Pointer(), std_core.PointerFromQEvent(event))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_HasHeightForWidth
-func callbackPlainTextEditb1a9c9_HasHeightForWidth(ptr unsafe.Pointer) C.char {
+//export callbackPlainTextEdit209179_HasHeightForWidth
+func callbackPlainTextEdit209179_HasHeightForWidth(ptr unsafe.Pointer) C.char {
 	if signal := qt.GetSignal(ptr, "hasHeightForWidth"); signal != nil {
 		return C.char(int8(qt.GoBoolToInt((*(*func() bool)(signal))())))
 	}
@@ -1322,13 +1378,13 @@ func callbackPlainTextEditb1a9c9_HasHeightForWidth(ptr unsafe.Pointer) C.char {
 
 func (ptr *PlainTextEdit) HasHeightForWidthDefault() bool {
 	if ptr.Pointer() != nil {
-		return int8(C.PlainTextEditb1a9c9_HasHeightForWidthDefault(ptr.Pointer())) != 0
+		return int8(C.PlainTextEdit209179_HasHeightForWidthDefault(ptr.Pointer())) != 0
 	}
 	return false
 }
 
-//export callbackPlainTextEditb1a9c9_HeightForWidth
-func callbackPlainTextEditb1a9c9_HeightForWidth(ptr unsafe.Pointer, w C.int) C.int {
+//export callbackPlainTextEdit209179_HeightForWidth
+func callbackPlainTextEdit209179_HeightForWidth(ptr unsafe.Pointer, w C.int) C.int {
 	if signal := qt.GetSignal(ptr, "heightForWidth"); signal != nil {
 		return C.int(int32((*(*func(int) int)(signal))(int(int32(w)))))
 	}
@@ -1338,13 +1394,13 @@ func callbackPlainTextEditb1a9c9_HeightForWidth(ptr unsafe.Pointer, w C.int) C.i
 
 func (ptr *PlainTextEdit) HeightForWidthDefault(w int) int {
 	if ptr.Pointer() != nil {
-		return int(int32(C.PlainTextEditb1a9c9_HeightForWidthDefault(ptr.Pointer(), C.int(int32(w)))))
+		return int(int32(C.PlainTextEdit209179_HeightForWidthDefault(ptr.Pointer(), C.int(int32(w)))))
 	}
 	return 0
 }
 
-//export callbackPlainTextEditb1a9c9_Hide
-func callbackPlainTextEditb1a9c9_Hide(ptr unsafe.Pointer) {
+//export callbackPlainTextEdit209179_Hide
+func callbackPlainTextEdit209179_Hide(ptr unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "hide"); signal != nil {
 		(*(*func())(signal))()
 	} else {
@@ -1354,12 +1410,12 @@ func callbackPlainTextEditb1a9c9_Hide(ptr unsafe.Pointer) {
 
 func (ptr *PlainTextEdit) HideDefault() {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_HideDefault(ptr.Pointer())
+		C.PlainTextEdit209179_HideDefault(ptr.Pointer())
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_HideEvent
-func callbackPlainTextEditb1a9c9_HideEvent(ptr unsafe.Pointer, event unsafe.Pointer) {
+//export callbackPlainTextEdit209179_HideEvent
+func callbackPlainTextEdit209179_HideEvent(ptr unsafe.Pointer, event unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "hideEvent"); signal != nil {
 		(*(*func(*std_gui.QHideEvent))(signal))(std_gui.NewQHideEventFromPointer(event))
 	} else {
@@ -1369,12 +1425,12 @@ func callbackPlainTextEditb1a9c9_HideEvent(ptr unsafe.Pointer, event unsafe.Poin
 
 func (ptr *PlainTextEdit) HideEventDefault(event std_gui.QHideEvent_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_HideEventDefault(ptr.Pointer(), std_gui.PointerFromQHideEvent(event))
+		C.PlainTextEdit209179_HideEventDefault(ptr.Pointer(), std_gui.PointerFromQHideEvent(event))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_InitPainter
-func callbackPlainTextEditb1a9c9_InitPainter(ptr unsafe.Pointer, painter unsafe.Pointer) {
+//export callbackPlainTextEdit209179_InitPainter
+func callbackPlainTextEdit209179_InitPainter(ptr unsafe.Pointer, painter unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "initPainter"); signal != nil {
 		(*(*func(*std_gui.QPainter))(signal))(std_gui.NewQPainterFromPointer(painter))
 	} else {
@@ -1384,12 +1440,12 @@ func callbackPlainTextEditb1a9c9_InitPainter(ptr unsafe.Pointer, painter unsafe.
 
 func (ptr *PlainTextEdit) InitPainterDefault(painter std_gui.QPainter_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_InitPainterDefault(ptr.Pointer(), std_gui.PointerFromQPainter(painter))
+		C.PlainTextEdit209179_InitPainterDefault(ptr.Pointer(), std_gui.PointerFromQPainter(painter))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_LeaveEvent
-func callbackPlainTextEditb1a9c9_LeaveEvent(ptr unsafe.Pointer, event unsafe.Pointer) {
+//export callbackPlainTextEdit209179_LeaveEvent
+func callbackPlainTextEdit209179_LeaveEvent(ptr unsafe.Pointer, event unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "leaveEvent"); signal != nil {
 		(*(*func(*std_core.QEvent))(signal))(std_core.NewQEventFromPointer(event))
 	} else {
@@ -1399,12 +1455,12 @@ func callbackPlainTextEditb1a9c9_LeaveEvent(ptr unsafe.Pointer, event unsafe.Poi
 
 func (ptr *PlainTextEdit) LeaveEventDefault(event std_core.QEvent_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_LeaveEventDefault(ptr.Pointer(), std_core.PointerFromQEvent(event))
+		C.PlainTextEdit209179_LeaveEventDefault(ptr.Pointer(), std_core.PointerFromQEvent(event))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_Lower
-func callbackPlainTextEditb1a9c9_Lower(ptr unsafe.Pointer) {
+//export callbackPlainTextEdit209179_Lower
+func callbackPlainTextEdit209179_Lower(ptr unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "lower"); signal != nil {
 		(*(*func())(signal))()
 	} else {
@@ -1414,12 +1470,12 @@ func callbackPlainTextEditb1a9c9_Lower(ptr unsafe.Pointer) {
 
 func (ptr *PlainTextEdit) LowerDefault() {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_LowerDefault(ptr.Pointer())
+		C.PlainTextEdit209179_LowerDefault(ptr.Pointer())
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_Metric
-func callbackPlainTextEditb1a9c9_Metric(ptr unsafe.Pointer, m C.longlong) C.int {
+//export callbackPlainTextEdit209179_Metric
+func callbackPlainTextEdit209179_Metric(ptr unsafe.Pointer, m C.longlong) C.int {
 	if signal := qt.GetSignal(ptr, "metric"); signal != nil {
 		return C.int(int32((*(*func(std_gui.QPaintDevice__PaintDeviceMetric) int)(signal))(std_gui.QPaintDevice__PaintDeviceMetric(m))))
 	}
@@ -1429,13 +1485,13 @@ func callbackPlainTextEditb1a9c9_Metric(ptr unsafe.Pointer, m C.longlong) C.int 
 
 func (ptr *PlainTextEdit) MetricDefault(m std_gui.QPaintDevice__PaintDeviceMetric) int {
 	if ptr.Pointer() != nil {
-		return int(int32(C.PlainTextEditb1a9c9_MetricDefault(ptr.Pointer(), C.longlong(m))))
+		return int(int32(C.PlainTextEdit209179_MetricDefault(ptr.Pointer(), C.longlong(m))))
 	}
 	return 0
 }
 
-//export callbackPlainTextEditb1a9c9_MoveEvent
-func callbackPlainTextEditb1a9c9_MoveEvent(ptr unsafe.Pointer, event unsafe.Pointer) {
+//export callbackPlainTextEdit209179_MoveEvent
+func callbackPlainTextEdit209179_MoveEvent(ptr unsafe.Pointer, event unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "moveEvent"); signal != nil {
 		(*(*func(*std_gui.QMoveEvent))(signal))(std_gui.NewQMoveEventFromPointer(event))
 	} else {
@@ -1445,12 +1501,12 @@ func callbackPlainTextEditb1a9c9_MoveEvent(ptr unsafe.Pointer, event unsafe.Poin
 
 func (ptr *PlainTextEdit) MoveEventDefault(event std_gui.QMoveEvent_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_MoveEventDefault(ptr.Pointer(), std_gui.PointerFromQMoveEvent(event))
+		C.PlainTextEdit209179_MoveEventDefault(ptr.Pointer(), std_gui.PointerFromQMoveEvent(event))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_NativeEvent
-func callbackPlainTextEditb1a9c9_NativeEvent(ptr unsafe.Pointer, eventType unsafe.Pointer, message unsafe.Pointer, result *C.long) C.char {
+//export callbackPlainTextEdit209179_NativeEvent
+func callbackPlainTextEdit209179_NativeEvent(ptr unsafe.Pointer, eventType unsafe.Pointer, message unsafe.Pointer, result *C.long) C.char {
 	var resultR int
 	if result != nil {
 		resultR = int(int32(*result))
@@ -1470,13 +1526,13 @@ func (ptr *PlainTextEdit) NativeEventDefault(eventType std_core.QByteArray_ITF, 
 			resultC = C.long(int32(*result))
 			defer func() { *result = int(int32(resultC)) }()
 		}
-		return int8(C.PlainTextEditb1a9c9_NativeEventDefault(ptr.Pointer(), std_core.PointerFromQByteArray(eventType), message, &resultC)) != 0
+		return int8(C.PlainTextEdit209179_NativeEventDefault(ptr.Pointer(), std_core.PointerFromQByteArray(eventType), message, &resultC)) != 0
 	}
 	return false
 }
 
-//export callbackPlainTextEditb1a9c9_PaintEngine
-func callbackPlainTextEditb1a9c9_PaintEngine(ptr unsafe.Pointer) unsafe.Pointer {
+//export callbackPlainTextEdit209179_PaintEngine
+func callbackPlainTextEdit209179_PaintEngine(ptr unsafe.Pointer) unsafe.Pointer {
 	if signal := qt.GetSignal(ptr, "paintEngine"); signal != nil {
 		return std_gui.PointerFromQPaintEngine((*(*func() *std_gui.QPaintEngine)(signal))())
 	}
@@ -1486,13 +1542,13 @@ func callbackPlainTextEditb1a9c9_PaintEngine(ptr unsafe.Pointer) unsafe.Pointer 
 
 func (ptr *PlainTextEdit) PaintEngineDefault() *std_gui.QPaintEngine {
 	if ptr.Pointer() != nil {
-		return std_gui.NewQPaintEngineFromPointer(C.PlainTextEditb1a9c9_PaintEngineDefault(ptr.Pointer()))
+		return std_gui.NewQPaintEngineFromPointer(C.PlainTextEdit209179_PaintEngineDefault(ptr.Pointer()))
 	}
 	return nil
 }
 
-//export callbackPlainTextEditb1a9c9_Raise
-func callbackPlainTextEditb1a9c9_Raise(ptr unsafe.Pointer) {
+//export callbackPlainTextEdit209179_Raise
+func callbackPlainTextEdit209179_Raise(ptr unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "raise"); signal != nil {
 		(*(*func())(signal))()
 	} else {
@@ -1502,12 +1558,12 @@ func callbackPlainTextEditb1a9c9_Raise(ptr unsafe.Pointer) {
 
 func (ptr *PlainTextEdit) RaiseDefault() {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_RaiseDefault(ptr.Pointer())
+		C.PlainTextEdit209179_RaiseDefault(ptr.Pointer())
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_Repaint
-func callbackPlainTextEditb1a9c9_Repaint(ptr unsafe.Pointer) {
+//export callbackPlainTextEdit209179_Repaint
+func callbackPlainTextEdit209179_Repaint(ptr unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "repaint"); signal != nil {
 		(*(*func())(signal))()
 	} else {
@@ -1517,12 +1573,12 @@ func callbackPlainTextEditb1a9c9_Repaint(ptr unsafe.Pointer) {
 
 func (ptr *PlainTextEdit) RepaintDefault() {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_RepaintDefault(ptr.Pointer())
+		C.PlainTextEdit209179_RepaintDefault(ptr.Pointer())
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_SetDisabled
-func callbackPlainTextEditb1a9c9_SetDisabled(ptr unsafe.Pointer, disable C.char) {
+//export callbackPlainTextEdit209179_SetDisabled
+func callbackPlainTextEdit209179_SetDisabled(ptr unsafe.Pointer, disable C.char) {
 	if signal := qt.GetSignal(ptr, "setDisabled"); signal != nil {
 		(*(*func(bool))(signal))(int8(disable) != 0)
 	} else {
@@ -1532,12 +1588,12 @@ func callbackPlainTextEditb1a9c9_SetDisabled(ptr unsafe.Pointer, disable C.char)
 
 func (ptr *PlainTextEdit) SetDisabledDefault(disable bool) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_SetDisabledDefault(ptr.Pointer(), C.char(int8(qt.GoBoolToInt(disable))))
+		C.PlainTextEdit209179_SetDisabledDefault(ptr.Pointer(), C.char(int8(qt.GoBoolToInt(disable))))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_SetEnabled
-func callbackPlainTextEditb1a9c9_SetEnabled(ptr unsafe.Pointer, vbo C.char) {
+//export callbackPlainTextEdit209179_SetEnabled
+func callbackPlainTextEdit209179_SetEnabled(ptr unsafe.Pointer, vbo C.char) {
 	if signal := qt.GetSignal(ptr, "setEnabled"); signal != nil {
 		(*(*func(bool))(signal))(int8(vbo) != 0)
 	} else {
@@ -1547,12 +1603,12 @@ func callbackPlainTextEditb1a9c9_SetEnabled(ptr unsafe.Pointer, vbo C.char) {
 
 func (ptr *PlainTextEdit) SetEnabledDefault(vbo bool) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_SetEnabledDefault(ptr.Pointer(), C.char(int8(qt.GoBoolToInt(vbo))))
+		C.PlainTextEdit209179_SetEnabledDefault(ptr.Pointer(), C.char(int8(qt.GoBoolToInt(vbo))))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_SetFocus2
-func callbackPlainTextEditb1a9c9_SetFocus2(ptr unsafe.Pointer) {
+//export callbackPlainTextEdit209179_SetFocus2
+func callbackPlainTextEdit209179_SetFocus2(ptr unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "setFocus2"); signal != nil {
 		(*(*func())(signal))()
 	} else {
@@ -1562,12 +1618,12 @@ func callbackPlainTextEditb1a9c9_SetFocus2(ptr unsafe.Pointer) {
 
 func (ptr *PlainTextEdit) SetFocus2Default() {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_SetFocus2Default(ptr.Pointer())
+		C.PlainTextEdit209179_SetFocus2Default(ptr.Pointer())
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_SetHidden
-func callbackPlainTextEditb1a9c9_SetHidden(ptr unsafe.Pointer, hidden C.char) {
+//export callbackPlainTextEdit209179_SetHidden
+func callbackPlainTextEdit209179_SetHidden(ptr unsafe.Pointer, hidden C.char) {
 	if signal := qt.GetSignal(ptr, "setHidden"); signal != nil {
 		(*(*func(bool))(signal))(int8(hidden) != 0)
 	} else {
@@ -1577,12 +1633,12 @@ func callbackPlainTextEditb1a9c9_SetHidden(ptr unsafe.Pointer, hidden C.char) {
 
 func (ptr *PlainTextEdit) SetHiddenDefault(hidden bool) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_SetHiddenDefault(ptr.Pointer(), C.char(int8(qt.GoBoolToInt(hidden))))
+		C.PlainTextEdit209179_SetHiddenDefault(ptr.Pointer(), C.char(int8(qt.GoBoolToInt(hidden))))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_SetStyleSheet
-func callbackPlainTextEditb1a9c9_SetStyleSheet(ptr unsafe.Pointer, styleSheet C.struct_Moc_PackedString) {
+//export callbackPlainTextEdit209179_SetStyleSheet
+func callbackPlainTextEdit209179_SetStyleSheet(ptr unsafe.Pointer, styleSheet C.struct_Moc_PackedString) {
 	if signal := qt.GetSignal(ptr, "setStyleSheet"); signal != nil {
 		(*(*func(string))(signal))(cGoUnpackString(styleSheet))
 	} else {
@@ -1597,12 +1653,12 @@ func (ptr *PlainTextEdit) SetStyleSheetDefault(styleSheet string) {
 			styleSheetC = C.CString(styleSheet)
 			defer C.free(unsafe.Pointer(styleSheetC))
 		}
-		C.PlainTextEditb1a9c9_SetStyleSheetDefault(ptr.Pointer(), C.struct_Moc_PackedString{data: styleSheetC, len: C.longlong(len(styleSheet))})
+		C.PlainTextEdit209179_SetStyleSheetDefault(ptr.Pointer(), C.struct_Moc_PackedString{data: styleSheetC, len: C.longlong(len(styleSheet))})
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_SetVisible
-func callbackPlainTextEditb1a9c9_SetVisible(ptr unsafe.Pointer, visible C.char) {
+//export callbackPlainTextEdit209179_SetVisible
+func callbackPlainTextEdit209179_SetVisible(ptr unsafe.Pointer, visible C.char) {
 	if signal := qt.GetSignal(ptr, "setVisible"); signal != nil {
 		(*(*func(bool))(signal))(int8(visible) != 0)
 	} else {
@@ -1612,12 +1668,12 @@ func callbackPlainTextEditb1a9c9_SetVisible(ptr unsafe.Pointer, visible C.char) 
 
 func (ptr *PlainTextEdit) SetVisibleDefault(visible bool) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_SetVisibleDefault(ptr.Pointer(), C.char(int8(qt.GoBoolToInt(visible))))
+		C.PlainTextEdit209179_SetVisibleDefault(ptr.Pointer(), C.char(int8(qt.GoBoolToInt(visible))))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_SetWindowModified
-func callbackPlainTextEditb1a9c9_SetWindowModified(ptr unsafe.Pointer, vbo C.char) {
+//export callbackPlainTextEdit209179_SetWindowModified
+func callbackPlainTextEdit209179_SetWindowModified(ptr unsafe.Pointer, vbo C.char) {
 	if signal := qt.GetSignal(ptr, "setWindowModified"); signal != nil {
 		(*(*func(bool))(signal))(int8(vbo) != 0)
 	} else {
@@ -1627,12 +1683,12 @@ func callbackPlainTextEditb1a9c9_SetWindowModified(ptr unsafe.Pointer, vbo C.cha
 
 func (ptr *PlainTextEdit) SetWindowModifiedDefault(vbo bool) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_SetWindowModifiedDefault(ptr.Pointer(), C.char(int8(qt.GoBoolToInt(vbo))))
+		C.PlainTextEdit209179_SetWindowModifiedDefault(ptr.Pointer(), C.char(int8(qt.GoBoolToInt(vbo))))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_SetWindowTitle
-func callbackPlainTextEditb1a9c9_SetWindowTitle(ptr unsafe.Pointer, vqs C.struct_Moc_PackedString) {
+//export callbackPlainTextEdit209179_SetWindowTitle
+func callbackPlainTextEdit209179_SetWindowTitle(ptr unsafe.Pointer, vqs C.struct_Moc_PackedString) {
 	if signal := qt.GetSignal(ptr, "setWindowTitle"); signal != nil {
 		(*(*func(string))(signal))(cGoUnpackString(vqs))
 	} else {
@@ -1647,12 +1703,12 @@ func (ptr *PlainTextEdit) SetWindowTitleDefault(vqs string) {
 			vqsC = C.CString(vqs)
 			defer C.free(unsafe.Pointer(vqsC))
 		}
-		C.PlainTextEditb1a9c9_SetWindowTitleDefault(ptr.Pointer(), C.struct_Moc_PackedString{data: vqsC, len: C.longlong(len(vqs))})
+		C.PlainTextEdit209179_SetWindowTitleDefault(ptr.Pointer(), C.struct_Moc_PackedString{data: vqsC, len: C.longlong(len(vqs))})
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_Show
-func callbackPlainTextEditb1a9c9_Show(ptr unsafe.Pointer) {
+//export callbackPlainTextEdit209179_Show
+func callbackPlainTextEdit209179_Show(ptr unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "show"); signal != nil {
 		(*(*func())(signal))()
 	} else {
@@ -1662,12 +1718,12 @@ func callbackPlainTextEditb1a9c9_Show(ptr unsafe.Pointer) {
 
 func (ptr *PlainTextEdit) ShowDefault() {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_ShowDefault(ptr.Pointer())
+		C.PlainTextEdit209179_ShowDefault(ptr.Pointer())
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_ShowFullScreen
-func callbackPlainTextEditb1a9c9_ShowFullScreen(ptr unsafe.Pointer) {
+//export callbackPlainTextEdit209179_ShowFullScreen
+func callbackPlainTextEdit209179_ShowFullScreen(ptr unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "showFullScreen"); signal != nil {
 		(*(*func())(signal))()
 	} else {
@@ -1677,12 +1733,12 @@ func callbackPlainTextEditb1a9c9_ShowFullScreen(ptr unsafe.Pointer) {
 
 func (ptr *PlainTextEdit) ShowFullScreenDefault() {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_ShowFullScreenDefault(ptr.Pointer())
+		C.PlainTextEdit209179_ShowFullScreenDefault(ptr.Pointer())
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_ShowMaximized
-func callbackPlainTextEditb1a9c9_ShowMaximized(ptr unsafe.Pointer) {
+//export callbackPlainTextEdit209179_ShowMaximized
+func callbackPlainTextEdit209179_ShowMaximized(ptr unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "showMaximized"); signal != nil {
 		(*(*func())(signal))()
 	} else {
@@ -1692,12 +1748,12 @@ func callbackPlainTextEditb1a9c9_ShowMaximized(ptr unsafe.Pointer) {
 
 func (ptr *PlainTextEdit) ShowMaximizedDefault() {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_ShowMaximizedDefault(ptr.Pointer())
+		C.PlainTextEdit209179_ShowMaximizedDefault(ptr.Pointer())
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_ShowMinimized
-func callbackPlainTextEditb1a9c9_ShowMinimized(ptr unsafe.Pointer) {
+//export callbackPlainTextEdit209179_ShowMinimized
+func callbackPlainTextEdit209179_ShowMinimized(ptr unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "showMinimized"); signal != nil {
 		(*(*func())(signal))()
 	} else {
@@ -1707,12 +1763,12 @@ func callbackPlainTextEditb1a9c9_ShowMinimized(ptr unsafe.Pointer) {
 
 func (ptr *PlainTextEdit) ShowMinimizedDefault() {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_ShowMinimizedDefault(ptr.Pointer())
+		C.PlainTextEdit209179_ShowMinimizedDefault(ptr.Pointer())
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_ShowNormal
-func callbackPlainTextEditb1a9c9_ShowNormal(ptr unsafe.Pointer) {
+//export callbackPlainTextEdit209179_ShowNormal
+func callbackPlainTextEdit209179_ShowNormal(ptr unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "showNormal"); signal != nil {
 		(*(*func())(signal))()
 	} else {
@@ -1722,12 +1778,12 @@ func callbackPlainTextEditb1a9c9_ShowNormal(ptr unsafe.Pointer) {
 
 func (ptr *PlainTextEdit) ShowNormalDefault() {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_ShowNormalDefault(ptr.Pointer())
+		C.PlainTextEdit209179_ShowNormalDefault(ptr.Pointer())
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_TabletEvent
-func callbackPlainTextEditb1a9c9_TabletEvent(ptr unsafe.Pointer, event unsafe.Pointer) {
+//export callbackPlainTextEdit209179_TabletEvent
+func callbackPlainTextEdit209179_TabletEvent(ptr unsafe.Pointer, event unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "tabletEvent"); signal != nil {
 		(*(*func(*std_gui.QTabletEvent))(signal))(std_gui.NewQTabletEventFromPointer(event))
 	} else {
@@ -1737,12 +1793,12 @@ func callbackPlainTextEditb1a9c9_TabletEvent(ptr unsafe.Pointer, event unsafe.Po
 
 func (ptr *PlainTextEdit) TabletEventDefault(event std_gui.QTabletEvent_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_TabletEventDefault(ptr.Pointer(), std_gui.PointerFromQTabletEvent(event))
+		C.PlainTextEdit209179_TabletEventDefault(ptr.Pointer(), std_gui.PointerFromQTabletEvent(event))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_Update
-func callbackPlainTextEditb1a9c9_Update(ptr unsafe.Pointer) {
+//export callbackPlainTextEdit209179_Update
+func callbackPlainTextEdit209179_Update(ptr unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "update"); signal != nil {
 		(*(*func())(signal))()
 	} else {
@@ -1752,12 +1808,12 @@ func callbackPlainTextEditb1a9c9_Update(ptr unsafe.Pointer) {
 
 func (ptr *PlainTextEdit) UpdateDefault() {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_UpdateDefault(ptr.Pointer())
+		C.PlainTextEdit209179_UpdateDefault(ptr.Pointer())
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_UpdateMicroFocus
-func callbackPlainTextEditb1a9c9_UpdateMicroFocus(ptr unsafe.Pointer) {
+//export callbackPlainTextEdit209179_UpdateMicroFocus
+func callbackPlainTextEdit209179_UpdateMicroFocus(ptr unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "updateMicroFocus"); signal != nil {
 		(*(*func())(signal))()
 	} else {
@@ -1767,28 +1823,28 @@ func callbackPlainTextEditb1a9c9_UpdateMicroFocus(ptr unsafe.Pointer) {
 
 func (ptr *PlainTextEdit) UpdateMicroFocusDefault() {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_UpdateMicroFocusDefault(ptr.Pointer())
+		C.PlainTextEdit209179_UpdateMicroFocusDefault(ptr.Pointer())
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_WindowIconChanged
-func callbackPlainTextEditb1a9c9_WindowIconChanged(ptr unsafe.Pointer, icon unsafe.Pointer) {
+//export callbackPlainTextEdit209179_WindowIconChanged
+func callbackPlainTextEdit209179_WindowIconChanged(ptr unsafe.Pointer, icon unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "windowIconChanged"); signal != nil {
 		(*(*func(*std_gui.QIcon))(signal))(std_gui.NewQIconFromPointer(icon))
 	}
 
 }
 
-//export callbackPlainTextEditb1a9c9_WindowTitleChanged
-func callbackPlainTextEditb1a9c9_WindowTitleChanged(ptr unsafe.Pointer, title C.struct_Moc_PackedString) {
+//export callbackPlainTextEdit209179_WindowTitleChanged
+func callbackPlainTextEdit209179_WindowTitleChanged(ptr unsafe.Pointer, title C.struct_Moc_PackedString) {
 	if signal := qt.GetSignal(ptr, "windowTitleChanged"); signal != nil {
 		(*(*func(string))(signal))(cGoUnpackString(title))
 	}
 
 }
 
-//export callbackPlainTextEditb1a9c9_ChildEvent
-func callbackPlainTextEditb1a9c9_ChildEvent(ptr unsafe.Pointer, event unsafe.Pointer) {
+//export callbackPlainTextEdit209179_ChildEvent
+func callbackPlainTextEdit209179_ChildEvent(ptr unsafe.Pointer, event unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "childEvent"); signal != nil {
 		(*(*func(*std_core.QChildEvent))(signal))(std_core.NewQChildEventFromPointer(event))
 	} else {
@@ -1798,12 +1854,12 @@ func callbackPlainTextEditb1a9c9_ChildEvent(ptr unsafe.Pointer, event unsafe.Poi
 
 func (ptr *PlainTextEdit) ChildEventDefault(event std_core.QChildEvent_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_ChildEventDefault(ptr.Pointer(), std_core.PointerFromQChildEvent(event))
+		C.PlainTextEdit209179_ChildEventDefault(ptr.Pointer(), std_core.PointerFromQChildEvent(event))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_ConnectNotify
-func callbackPlainTextEditb1a9c9_ConnectNotify(ptr unsafe.Pointer, sign unsafe.Pointer) {
+//export callbackPlainTextEdit209179_ConnectNotify
+func callbackPlainTextEdit209179_ConnectNotify(ptr unsafe.Pointer, sign unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "connectNotify"); signal != nil {
 		(*(*func(*std_core.QMetaMethod))(signal))(std_core.NewQMetaMethodFromPointer(sign))
 	} else {
@@ -1813,12 +1869,12 @@ func callbackPlainTextEditb1a9c9_ConnectNotify(ptr unsafe.Pointer, sign unsafe.P
 
 func (ptr *PlainTextEdit) ConnectNotifyDefault(sign std_core.QMetaMethod_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_ConnectNotifyDefault(ptr.Pointer(), std_core.PointerFromQMetaMethod(sign))
+		C.PlainTextEdit209179_ConnectNotifyDefault(ptr.Pointer(), std_core.PointerFromQMetaMethod(sign))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_CustomEvent
-func callbackPlainTextEditb1a9c9_CustomEvent(ptr unsafe.Pointer, event unsafe.Pointer) {
+//export callbackPlainTextEdit209179_CustomEvent
+func callbackPlainTextEdit209179_CustomEvent(ptr unsafe.Pointer, event unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "customEvent"); signal != nil {
 		(*(*func(*std_core.QEvent))(signal))(std_core.NewQEventFromPointer(event))
 	} else {
@@ -1828,12 +1884,12 @@ func callbackPlainTextEditb1a9c9_CustomEvent(ptr unsafe.Pointer, event unsafe.Po
 
 func (ptr *PlainTextEdit) CustomEventDefault(event std_core.QEvent_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_CustomEventDefault(ptr.Pointer(), std_core.PointerFromQEvent(event))
+		C.PlainTextEdit209179_CustomEventDefault(ptr.Pointer(), std_core.PointerFromQEvent(event))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_DeleteLater
-func callbackPlainTextEditb1a9c9_DeleteLater(ptr unsafe.Pointer) {
+//export callbackPlainTextEdit209179_DeleteLater
+func callbackPlainTextEdit209179_DeleteLater(ptr unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "deleteLater"); signal != nil {
 		(*(*func())(signal))()
 	} else {
@@ -1845,12 +1901,12 @@ func (ptr *PlainTextEdit) DeleteLaterDefault() {
 	if ptr.Pointer() != nil {
 
 		qt.SetFinalizer(ptr, nil)
-		C.PlainTextEditb1a9c9_DeleteLaterDefault(ptr.Pointer())
+		C.PlainTextEdit209179_DeleteLaterDefault(ptr.Pointer())
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_Destroyed
-func callbackPlainTextEditb1a9c9_Destroyed(ptr unsafe.Pointer, obj unsafe.Pointer) {
+//export callbackPlainTextEdit209179_Destroyed
+func callbackPlainTextEdit209179_Destroyed(ptr unsafe.Pointer, obj unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "destroyed"); signal != nil {
 		(*(*func(*std_core.QObject))(signal))(std_core.NewQObjectFromPointer(obj))
 	}
@@ -1858,8 +1914,8 @@ func callbackPlainTextEditb1a9c9_Destroyed(ptr unsafe.Pointer, obj unsafe.Pointe
 
 }
 
-//export callbackPlainTextEditb1a9c9_DisconnectNotify
-func callbackPlainTextEditb1a9c9_DisconnectNotify(ptr unsafe.Pointer, sign unsafe.Pointer) {
+//export callbackPlainTextEdit209179_DisconnectNotify
+func callbackPlainTextEdit209179_DisconnectNotify(ptr unsafe.Pointer, sign unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "disconnectNotify"); signal != nil {
 		(*(*func(*std_core.QMetaMethod))(signal))(std_core.NewQMetaMethodFromPointer(sign))
 	} else {
@@ -1869,12 +1925,12 @@ func callbackPlainTextEditb1a9c9_DisconnectNotify(ptr unsafe.Pointer, sign unsaf
 
 func (ptr *PlainTextEdit) DisconnectNotifyDefault(sign std_core.QMetaMethod_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_DisconnectNotifyDefault(ptr.Pointer(), std_core.PointerFromQMetaMethod(sign))
+		C.PlainTextEdit209179_DisconnectNotifyDefault(ptr.Pointer(), std_core.PointerFromQMetaMethod(sign))
 	}
 }
 
-//export callbackPlainTextEditb1a9c9_EventFilter
-func callbackPlainTextEditb1a9c9_EventFilter(ptr unsafe.Pointer, watched unsafe.Pointer, event unsafe.Pointer) C.char {
+//export callbackPlainTextEdit209179_EventFilter
+func callbackPlainTextEdit209179_EventFilter(ptr unsafe.Pointer, watched unsafe.Pointer, event unsafe.Pointer) C.char {
 	if signal := qt.GetSignal(ptr, "eventFilter"); signal != nil {
 		return C.char(int8(qt.GoBoolToInt((*(*func(*std_core.QObject, *std_core.QEvent) bool)(signal))(std_core.NewQObjectFromPointer(watched), std_core.NewQEventFromPointer(event)))))
 	}
@@ -1884,21 +1940,21 @@ func callbackPlainTextEditb1a9c9_EventFilter(ptr unsafe.Pointer, watched unsafe.
 
 func (ptr *PlainTextEdit) EventFilterDefault(watched std_core.QObject_ITF, event std_core.QEvent_ITF) bool {
 	if ptr.Pointer() != nil {
-		return int8(C.PlainTextEditb1a9c9_EventFilterDefault(ptr.Pointer(), std_core.PointerFromQObject(watched), std_core.PointerFromQEvent(event))) != 0
+		return int8(C.PlainTextEdit209179_EventFilterDefault(ptr.Pointer(), std_core.PointerFromQObject(watched), std_core.PointerFromQEvent(event))) != 0
 	}
 	return false
 }
 
-//export callbackPlainTextEditb1a9c9_ObjectNameChanged
-func callbackPlainTextEditb1a9c9_ObjectNameChanged(ptr unsafe.Pointer, objectName C.struct_Moc_PackedString) {
+//export callbackPlainTextEdit209179_ObjectNameChanged
+func callbackPlainTextEdit209179_ObjectNameChanged(ptr unsafe.Pointer, objectName C.struct_Moc_PackedString) {
 	if signal := qt.GetSignal(ptr, "objectNameChanged"); signal != nil {
 		(*(*func(string))(signal))(cGoUnpackString(objectName))
 	}
 
 }
 
-//export callbackPlainTextEditb1a9c9_TimerEvent
-func callbackPlainTextEditb1a9c9_TimerEvent(ptr unsafe.Pointer, event unsafe.Pointer) {
+//export callbackPlainTextEdit209179_TimerEvent
+func callbackPlainTextEdit209179_TimerEvent(ptr unsafe.Pointer, event unsafe.Pointer) {
 	if signal := qt.GetSignal(ptr, "timerEvent"); signal != nil {
 		(*(*func(*std_core.QTimerEvent))(signal))(std_core.NewQTimerEventFromPointer(event))
 	} else {
@@ -1908,7 +1964,7 @@ func callbackPlainTextEditb1a9c9_TimerEvent(ptr unsafe.Pointer, event unsafe.Poi
 
 func (ptr *PlainTextEdit) TimerEventDefault(event std_core.QTimerEvent_ITF) {
 	if ptr.Pointer() != nil {
-		C.PlainTextEditb1a9c9_TimerEventDefault(ptr.Pointer(), std_core.PointerFromQTimerEvent(event))
+		C.PlainTextEdit209179_TimerEventDefault(ptr.Pointer(), std_core.PointerFromQTimerEvent(event))
 	}
 }
 

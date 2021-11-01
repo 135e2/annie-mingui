@@ -1,85 +1,62 @@
 package youtube
 
 import (
-	"encoding/json"
-	"errors"
 	"fmt"
 	"strconv"
-	"strings"
 
-	"github.com/rylio/ytdl"
+	"github.com/kkdai/youtube/v2"
 
-	"github.com/iawia002/annie/config"
-	"github.com/iawia002/annie/downloader"
-	"github.com/iawia002/annie/extractors"
+	"github.com/iawia002/annie/extractors/types"
 	"github.com/iawia002/annie/request"
 	"github.com/iawia002/annie/utils"
 )
 
-type streamFormat struct {
-	Itag          int    `json:"itag"`
-	URL           string `json:"url"`
-	MimeType      string `json:"mimeType"`
-	ContentLength string `json:"contentLength"`
-	QualityLabel  string `json:"qualityLabel"`
-	AudioQuality  string `json:"audioQuality"`
-}
-
-type playerResponseType struct {
-	StreamingData struct {
-		Formats         []streamFormat `json:"formats"`
-		AdaptiveFormats []streamFormat `json:"adaptiveFormats"`
-	} `json:"streamingData"`
-	VideoDetails struct {
-		Title string `json:"title"`
-	} `json:"videoDetails"`
-}
-
-type youtubeData struct {
-	Args struct {
-		PlayerResponse string `json:"player_response"`
-	} `json:"args"`
-}
-
 const referer = "https://www.youtube.com"
 
-// Extract is the main function for extracting data
-func Extract(uri string) ([]downloader.Data, error) {
-	var err error
-	if !config.Playlist {
-		return []downloader.Data{youtubeDownload(uri)}, nil
+type extractor struct {
+	client *youtube.Client
+}
+
+// New returns a youtube extractor.
+func New() types.Extractor {
+	return &extractor{
+		client: &youtube.Client{},
 	}
-	listIDs := utils.MatchOneOf(uri, `(list|p)=([^/&]+)`)
-	if listIDs == nil || len(listIDs) < 3 {
-		return nil, extractors.ErrURLParseFailed
-	}
-	listID := listIDs[2]
-	if len(listID) == 0 {
-		return nil, errors.New("can't get list ID from URL")
+}
+
+// Extract is the main function to extract the data.
+func (e *extractor) Extract(url string, option types.Options) ([]*types.Data, error) {
+	if !option.Playlist {
+		video, err := e.client.GetVideo(url)
+		if err != nil {
+			return nil, err
+		}
+		return []*types.Data{e.youtubeDownload(url, video)}, nil
 	}
 
-	html, err := request.Get("https://www.youtube.com/playlist?list="+listID, referer, nil)
+	playlist, err := e.client.GetPlaylist(url)
 	if err != nil {
 		return nil, err
 	}
-	// "videoId":"OQxX8zgyzuM","thumbnail"
-	videoIDs := utils.MatchAll(html, `"videoId":"([^,]+?)","thumbnail"`)
-	needDownloadItems := utils.NeedDownloadList(len(videoIDs))
-	extractedData := make([]downloader.Data, len(needDownloadItems))
-	wgp := utils.NewWaitGroupPool(config.ThreadNumber)
+
+	needDownloadItems := utils.NeedDownloadList(option.Items, option.ItemStart, option.ItemEnd, len(playlist.Videos))
+	extractedData := make([]*types.Data, len(needDownloadItems))
+	wgp := utils.NewWaitGroupPool(option.ThreadNumber)
 	dataIndex := 0
-	for index, videoID := range videoIDs {
-		if !utils.ItemInSlice(index+1, needDownloadItems) || len(videoID) < 2 {
+	for index, videoEntry := range playlist.Videos {
+		if !utils.ItemInSlice(index+1, needDownloadItems) {
 			continue
 		}
-		u := fmt.Sprintf(
-			"https://www.youtube.com/watch?v=%s&list=%s", videoID[1], listID,
-		)
+
 		wgp.Add()
-		go func(index int, u string, extractedData []downloader.Data) {
+		go func(index int, extractedData []*types.Data) {
 			defer wgp.Done()
-			extractedData[index] = youtubeDownload(u)
-		}(dataIndex, u, extractedData)
+			video, err := e.client.VideoFromPlaylistEntry(videoEntry)
+			if err != nil {
+				return
+			}
+			extractedData[index] = e.youtubeDownload(url, video)
+		}(dataIndex, extractedData)
 		dataIndex++
 	}
 	wgp.Wait()
@@ -87,63 +64,87 @@ func Extract(uri string) ([]downloader.Data, error) {
 }
 
 // youtubeDownload download function for single url
-func youtubeDownload(uri string) downloader.Data {
-	vid := utils.MatchOneOf(
-		uri,
-		`watch\?v=([^/&]+)`,
-		`youtu\.be/([^?/]+)`,
-		`embed/([^/?]+)`,
-		`v/([^/?]+)`,
-	)
-	if vid == nil || len(vid) < 2 {
-		return downloader.EmptyData(uri, errors.New("can't find vid"))
-	}
+func (e *extractor) youtubeDownload(url string, video *youtube.Video) *types.Data {
+	streams := make(map[string]*types.Stream, len(video.Formats))
+	audioCache := make(map[string]*types.Part)
 
-	videoURL := fmt.Sprintf(
-		"https://www.youtube.com/watch?v=%s",
-		vid[1],
-	)
-
-	videoInfo, err := ytdl.GetVideoInfo(uri)
-	if err != nil {
-		return downloader.EmptyData(uri, err)
-	}
-
-	html, err := request.Get(videoURL, referer, nil)
-	if err != nil {
-		return downloader.EmptyData(uri, err)
-	}
-	ytplayer := utils.MatchOneOf(html, `;ytplayer\.config\s*=\s*({.+?});`)
-	if ytplayer == nil || len(ytplayer) < 2 {
-		if strings.Contains(html, "LOGIN_REQUIRED") ||
-			strings.Contains(html, "Sign in to confirm your age") {
-			return downloader.EmptyData(uri, extractors.ErrLoginRequired)
+	for i := range video.Formats {
+		f := &video.Formats[i]
+		itag := strconv.Itoa(f.ItagNo)
+		quality := f.MimeType
+		if f.QualityLabel != "" {
+			quality = fmt.Sprintf("%s %s", f.QualityLabel, f.MimeType)
 		}
-		return downloader.EmptyData(uri, extractors.ErrURLParseFailed)
+
+		part, err := e.genPartByFormat(video, f)
+		if err != nil {
+			return types.EmptyData(url, err)
+		}
+		stream := &types.Stream{
+			ID:      itag,
+			Parts:   []*types.Part{part},
+			Quality: quality,
+			Ext:     part.Ext,
+			NeedMux: true,
+		}
+
+		// Unlike `url_encoded_fmt_stream_map`, all videos in `adaptive_fmts` have no sound,
+		// we need download video and audio both and then merge them.
+		// video format with audio:
+		//   AudioSampleRate: "44100", AudioChannels: 2
+		// video format without audio:
+		//   AudioSampleRate: "", AudioChannels: 0
+		if f.AudioChannels == 0 {
+			audioPart, ok := audioCache[part.Ext]
+			if !ok {
+				audio, err := getVideoAudio(video, part.Ext)
+				if err != nil {
+					return types.EmptyData(url, err)
+				}
+				audioPart, err = e.genPartByFormat(video, audio)
+				if err != nil {
+					return types.EmptyData(url, err)
+				}
+				audioCache[part.Ext] = audioPart
+			}
+			stream.Parts = append(stream.Parts, audioPart)
+		}
+		streams[itag] = stream
 	}
 
-	var data youtubeData
-	if err = json.Unmarshal([]byte(ytplayer[1]), &data); err != nil {
-		return downloader.EmptyData(uri, err)
-	}
-	var playerResponse playerResponseType
-	if err = json.Unmarshal([]byte(data.Args.PlayerResponse), &playerResponse); err != nil {
-		return downloader.EmptyData(uri, err)
-	}
-	title := playerResponse.VideoDetails.Title
-
-	streams, err := extractVideoURLS(playerResponse, videoInfo)
-	if err != nil {
-		return downloader.EmptyData(uri, err)
-	}
-
-	return downloader.Data{
+	return &types.Data{
 		Site:    "YouTube youtube.com",
-		Title:   title,
+		Title:   video.Title,
 		Type:    "video",
 		Streams: streams,
-		URL:     uri,
+		URL:     url,
 	}
+}
+
+func (e *extractor) genPartByFormat(video *youtube.Video, f *youtube.Format) (*types.Part, error) {
+	ext := getStreamExt(f.MimeType)
+	url, err := e.client.GetStreamURL(video, f)
+	if err != nil {
+		return nil, err
+	}
+	size := f.ContentLength
+	if size == 0 {
+		size, _ = request.Size(url, referer)
+	}
+	return &types.Part{
+		URL:  url,
+		Size: size,
+		Ext:  ext,
+	}, nil
+}
+
+func getVideoAudio(v *youtube.Video, mimeType string) (*youtube.Format, error) {
+	audioFormats := v.Formats.Type(mimeType).Type("audio")
+	if len(audioFormats) == 0 {
+		return nil, fmt.Errorf("no audio format found after filtering")
+	}
+	audioFormats.Sort()
+	return &audioFormats[0], nil
 }
 
 func getStreamExt(streamType string) string {
@@ -153,94 +154,4 @@ func getStreamExt(streamType string) string {
 		return ""
 	}
 	return exts[2]
-}
-
-func getRealURL(videoFormat streamFormat, videoInfo *ytdl.VideoInfo, ext string) (*downloader.URL, error) {
-	ytdlFormat := new(ytdl.Format)
-	for _, f := range videoInfo.Formats {
-		if f.Itag.Number == videoFormat.Itag {
-			ytdlFormat = f
-			break
-		}
-	}
-
-	if ytdlFormat == nil {
-		return nil, fmt.Errorf("unable to get info for itag %d", videoFormat.Itag)
-	}
-
-	realURL, err := videoInfo.GetDownloadURL(ytdlFormat)
-	if err != nil {
-		return nil, err
-	}
-	size, _ := strconv.ParseInt(videoFormat.ContentLength, 10, 64)
-	return &downloader.URL{
-		URL:  realURL.String(),
-		Size: size,
-		Ext:  ext,
-	}, nil
-}
-
-func genStream(videoFormat streamFormat, videoInfo *ytdl.VideoInfo) (*downloader.Stream, error) {
-	streamType := videoFormat.MimeType
-	ext := getStreamExt(streamType)
-	if ext == "" {
-		return nil, fmt.Errorf("unable to get file extension of MimeType %s", streamType)
-	}
-
-	video, err := getRealURL(videoFormat, videoInfo, ext)
-	if err != nil {
-		return nil, err
-	}
-
-	var quality string
-	if videoFormat.QualityLabel != "" {
-		quality = fmt.Sprintf("%s %s", videoFormat.QualityLabel, streamType)
-	} else {
-		quality = streamType
-	}
-
-	return &downloader.Stream{
-		URLs:    []downloader.URL{*video},
-		Quality: quality,
-	}, nil
-}
-
-func extractVideoURLS(data playerResponseType, videoInfo *ytdl.VideoInfo) (map[string]downloader.Stream, error) {
-	streams := make(map[string]downloader.Stream, len(data.StreamingData.Formats)+len(data.StreamingData.AdaptiveFormats))
-	for _, f := range data.StreamingData.Formats {
-		stream, err := genStream(f, videoInfo)
-		if err != nil {
-			return nil, err
-		}
-
-		streams[strconv.Itoa(f.Itag)] = *stream
-	}
-
-	// Unlike `url_encoded_fmt_stream_map`, all videos in `adaptive_fmts` have no sound,
-	// we need download video and audio both and then merge them.
-
-	// get audio file for videos in AdaptiveFormats
-	var audio downloader.URL
-	for _, f := range data.StreamingData.AdaptiveFormats {
-		if strings.HasPrefix(f.MimeType, "audio/mp4") {
-			audioURL, err := getRealURL(f, videoInfo, "m4a")
-			if err != nil {
-				return nil, err
-			}
-			audio = *audioURL
-			break
-		}
-	}
-
-	for _, f := range data.StreamingData.AdaptiveFormats {
-		stream, err := genStream(f, videoInfo)
-		if err != nil {
-			return nil, err
-		}
-		stream.URLs = append(stream.URLs, audio)
-
-		streams[strconv.Itoa(f.Itag)] = *stream
-	}
-
-	return streams, nil
 }

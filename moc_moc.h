@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'moc.cpp'
 **
-** Created by: The Qt Meta Object Compiler version 67 (Qt 5.13.0)
+** Created by: The Qt Meta Object Compiler version 67 (Qt 5.15.2)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -12,7 +12,7 @@
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'moc.cpp' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 67
-#error "This file was generated using the moc from 5.13.0. It"
+#error "This file was generated using the moc from 5.15.2. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
@@ -20,28 +20,28 @@
 QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
-struct qt_meta_stringdata_PlainTextEditb1a9c9_t {
+struct qt_meta_stringdata_PlainTextEdit209179_t {
     QByteArrayData data[4];
     char stringdata0[32];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
-    qptrdiff(offsetof(qt_meta_stringdata_PlainTextEditb1a9c9_t, stringdata0) + ofs \
+    qptrdiff(offsetof(qt_meta_stringdata_PlainTextEdit209179_t, stringdata0) + ofs \
         - idx * sizeof(QByteArrayData)) \
     )
-static const qt_meta_stringdata_PlainTextEditb1a9c9_t qt_meta_stringdata_PlainTextEditb1a9c9 = {
+static const qt_meta_stringdata_PlainTextEdit209179_t qt_meta_stringdata_PlainTextEdit209179 = {
     {
-QT_MOC_LITERAL(0, 0, 19), // "PlainTextEditb1a9c9"
+QT_MOC_LITERAL(0, 0, 19), // "PlainTextEdit209179"
 QT_MOC_LITERAL(1, 20, 7), // "addLine"
 QT_MOC_LITERAL(2, 28, 0), // ""
 QT_MOC_LITERAL(3, 29, 2) // "v0"
 
     },
-    "PlainTextEditb1a9c9\0addLine\0\0v0"
+    "PlainTextEdit209179\0addLine\0\0v0"
 };
 #undef QT_MOC_LITERAL
 
-static const uint qt_meta_data_PlainTextEditb1a9c9[] = {
+static const uint qt_meta_data_PlainTextEdit209179[] = {
 
  // content:
        8,       // revision
@@ -63,10 +63,10 @@ static const uint qt_meta_data_PlainTextEditb1a9c9[] = {
        0        // eod
 };
 
-void PlainTextEditb1a9c9::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+void PlainTextEdit209179::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
 {
     if (_c == QMetaObject::InvokeMetaMethod) {
-        auto *_t = static_cast<PlainTextEditb1a9c9 *>(_o);
+        auto *_t = static_cast<PlainTextEdit209179 *>(_o);
         Q_UNUSED(_t)
         switch (_id) {
         case 0: _t->addLine((*reinterpret_cast< QString(*)>(_a[1]))); break;
@@ -75,30 +75,30 @@ void PlainTextEditb1a9c9::qt_static_metacall(QObject *_o, QMetaObject::Call _c, 
     }
 }
 
-QT_INIT_METAOBJECT const QMetaObject PlainTextEditb1a9c9::staticMetaObject = { {
-    &QPlainTextEdit::staticMetaObject,
-    qt_meta_stringdata_PlainTextEditb1a9c9.data,
-    qt_meta_data_PlainTextEditb1a9c9,
+QT_INIT_METAOBJECT const QMetaObject PlainTextEdit209179::staticMetaObject = { {
+    QMetaObject::SuperData::link<QPlainTextEdit::staticMetaObject>(),
+    qt_meta_stringdata_PlainTextEdit209179.data,
+    qt_meta_data_PlainTextEdit209179,
     qt_static_metacall,
     nullptr,
     nullptr
 } };
 
 
-const QMetaObject *PlainTextEditb1a9c9::metaObject() const
+const QMetaObject *PlainTextEdit209179::metaObject() const
 {
     return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
 }
 
-void *PlainTextEditb1a9c9::qt_metacast(const char *_clname)
+void *PlainTextEdit209179::qt_metacast(const char *_clname)
 {
     if (!_clname) return nullptr;
-    if (!strcmp(_clname, qt_meta_stringdata_PlainTextEditb1a9c9.stringdata0))
+    if (!strcmp(_clname, qt_meta_stringdata_PlainTextEdit209179.stringdata0))
         return static_cast<void*>(this);
     return QPlainTextEdit::qt_metacast(_clname);
 }
 
-int PlainTextEditb1a9c9::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+int PlainTextEdit209179::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
     _id = QPlainTextEdit::qt_metacall(_c, _id, _a);
     if (_id < 0)
