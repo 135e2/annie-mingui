@@ -36,6 +36,7 @@ const appAuthor = "Zhiming Wang"
 const appAuthorDomain = "zhimingwang.org"
 const about = `<p><strong>annie-mingui</strong> v0.11.0</p>
 <p>Copyright (c) 2020 Zhiming Wang</p>
+<p>Copyright (c) 2021 135e2 <135e2@135e2.tk></p>
 <p>annie-mingui is a Qt wrapper for <a href="https://github.com/iawia002/annie">iawia002/annie</a> the video downloader. Credits:</p>
 <ul>
   <li>iawia002/annie, MIT license;</li>
