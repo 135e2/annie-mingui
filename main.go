@@ -104,6 +104,7 @@ var locales = map[string]map[string]string{
 		"Download":            "下载",
 		"Download playlists":  "下载完整播单",
 		"Download started":    "下载已开始",
+		"Download completed":  "下载已完成",
 		"On network errors, e.g. HTTP 403, please retry a few times.": "如遇HTTP 403等网络错误，请重试几次。",
 		"Pick another folder": "选择文件夹",
 		"Video URL":           "视频链接",
@@ -422,7 +423,7 @@ func main() {
 					}
 					// fmt.Fprint(savedStdout, line)
 				}
-				output.addLine("")
+				output.addLine(tr("Download completed"))
 			}()
 
 			go func() {
