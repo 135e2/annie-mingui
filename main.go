@@ -43,7 +43,8 @@ const about = `<p><strong>annie-mingui</strong> v0.11.0</p>
   <li><a href="https://qt.io">Qt</a>, LGPLv3 license;</li>
   <li><a href="https://github.com/therecipe/qt">therecipe/qt</a>, Qt bindings for golang, LGPLv3 license.</li>
 </ul>
-<p>Project URL: <a href="https://github.com/fanaticscripter/annie-mingui">github.com/fanaticscripter/annie-mingui</a>.</p>
+<p>Project URL(old): <a href="https://github.com/fanaticscripter/annie-mingui">github.com/fanaticscripter/annie-mingui</a>.</p>
+<p>Project URL(revived): <a href="https://github.com/135e2/annie-mingui">github.com/135e2/annie-mingui</a>.</p>
 `
 
 // GUIConfig carries all application configurations.
